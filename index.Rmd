@@ -1,0 +1,397 @@
+---
+title: "Building a new geom in ggplot2"
+author: "<br> Sayani Gupta <br> <i class='fab fa-github'></i> Sayani07 &nbsp; &nbsp; <i class='fab fa-twitter' style='color:#6CADDE'></i> SayaniGupta07 <br><font> <small>https://sayanigupta-useR2020.netlify.com/</small>"
+email: "Sayani.Gupta@monash.edu"
+twitter: "SayaniGupta07"
+date:  <font size = "7"> R-Ladies Melbourne
+pdflink: ""
+bgimg: "images/grey-yellow.png"
+output:
+  xaringan::moon_reader:
+    after_body: ["libs/collapseoutput.js"]
+    css:
+      - ninjutsu 
+      - "assets/animate.css"
+      - "assets/monash-logo.css"
+      - "assets/monash-brand.css"
+      - "assets/monash-fonts.css"
+      - "assets/styles.css" # small improvements
+      - "assets/custom.css" # add your own CSS here!
+      - "assets/demo.css" # this should be removed
+      - "timeline.css"
+      - "libs/font-awesome/css/fontawesome-all.css"
+    # [ "libs/myremark.css", "xaringan-themer.css" , "libs/font-awesome/css/fontawesome-all.css"]
+    self_contained: false
+    lib_dir: libs
+    includes:
+      in_header: "assets/custom.html"
+    mathjax: "assets/mathjax-local/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    nature:
+      ratio: 16:9
+      highlightStyle: solarized-light
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning=FALSE, cache=TRUE,
+  dev.args=list(bg=grey(0.9), pointsize=11))
+
+knitr::read_chunk('R/main.R') 
+knitr::read_chunk('R/theme.R')
+```
+
+```{r load}
+```
+
+class: top left
+
+# About me
+
+---
+
+# Object-oriented programming
+
+building tools for data analysis
+
+---
+# Data example we will play with 
+
+---
+# Decomposing (Extension points) a ggplot into its consituents
+
+- Theme
+- scales
+- positions
+- statistics
+- geometries
+- coordinates
+- facets
+
+<!-- - mapping  -->
+<!-- - data -->
+
+---
+
+# Many geoms exists, why build a new one?
+
+- customize and integrate new graphical elements with existing ggplot2 visualizations, resulting in a broad range of informative graphics
+
+
+- ggplot2 creates graphics based on The Grammar of Graphics
+- graphics are built step by step by adding new elements that allows for extensive flexibility and customization of plots
+- need to extend the functionality of ggplot2
+
+
+- connecting the underlying theory of ggplot2 and The ggplot2 API
+
+- 47 geoms, 25 stats and 62 scales
+
+complete story told my multiple plots
+
+
+Gallery for ggplot2 extensions
+https://exts.ggplot2.tidyverse.org/gallery/
+---
+
+# What is the challenge(s)
+
+- Difficult to understand how ggplot2 translates a plot specification into an image.
+- ggplot2 interface is different to the structure of the underlying machinery that makes it work.
+
+---
+
+# Play with some geom
+
+Show same stat and geoms are different giving it a different geometry
+---
+
+# Play with some stat
+
+Show same stat and geoms are different giving it a different stat
+---
+
+# Structure ofggplot method
+
+```
+ggprint <- function(x) {
+  data <- ggplot_build(x) .......(1)
+  gtable <- ggplot_gtable(data)......(2)
+  grid::grid.newpage()
+  grid::grid.draw(gtable)......(3)
+  return(invisible(x))
+}
+```
+
+---
+
+# ggbuild -> Build step
+
+ggplot_build(), as discussed above, takes the declarative representation constructed with the public API and augments it by preparing the data for conversion to graphic primitives.
+
+## Data preparation
+
+## Data transformation
+
+## Output
+
+---
+# gtable
+
+All drawing is performed by the grid package together with the active graphics device. 
+
+Its job is to convert user data to one or more graphical primitives such as polygons, lines, points, etc and then hand responsibility over to the grid package.
+
+##  Rendering the panels
+
+
+## Adding guides
+---
+
+# Graphing distribution summaries
+
+
+.left-column[
+- several ways to summarize a distribution
+- R package ggdist for visualizing distributions and uncertainty
+]
+
+.right-column[
+```{r allplotspng}
+```
+]
+---
+class: top left
+
+# Different summarization expose different features
+
+.left-column[
+- Boxplot not suitable for summarizing multi-modal distributions
+- often useful to display different summarization in unison
+]
+
+.right-column[
+```{r question1png}
+```
+]
+---
+
+background-image: url("images/hdr_paper.png")
+
+background-position: center
+background-size: contain
+
+
+---
+# Highest Density Region (HDR) plots
+
+<font size = "3.5"> If $f(x)$ is the density function of a random variable $X$, then the 100 $(1 -\alpha)$ HDR is the subset $R(f_\alpha)$ of the sample space of $X$ such that $R(f_\alpha) = \{x: f(x) \geq f_\alpha\}$, where $f_\alpha$ is the largest constant such that $Pr(X \in R(f_\alpha)) \geq 1-\alpha)$.
+
+```{r falpha, out.width="80%"}
+```
+
+---
+# Graphing HDRs using R package hdrcde
+
+<i><font size = "4"> Data set: Waiting time between eruptions and the duration of the eruption for the Old Faithful geyser in Yellowstone National Park, Wyoming, USA. </font size = "4"></i>
+
+.pull-left[
+```r
+faithful %>% as_tibble
+```
+
+```{r print-data}
+```
+
+]
+
+.pull-right[
+```{r faithful-density}
+```
+]
+
+---
+
+# Graphing HDRs using R package hdrcde
+
+```{r hdrcde, out.width="90%"}
+```
+---
+What are:
+* the geoms
+* the stats
+* the coord
+* the data
+
+---
+# Extending ggplot2
+
+- HDR is a novel technique for summarizing distribution for which plotting is not implemented in ggplot2
+- ggplot2 creates graphics based on The Grammar of Graphics
+- graphics are built step by step by adding new elements that allows for extensive flexibility and customization of plots
+- need to extend the functionality of ggplot2
+
+Defining features of a circle??
+
+Always subclass an existing class (make a new stat)
+
+Class construction
+data preparation
+calculation
+requirements
+
+---
+class: top left
+
+# Package gghdr
+
+.pull-left[
+
+- implement HDR plots in ggplot2 
+- key elements: *geom* and *stats*
+- inspired from R package [`hdrcde`](https://pkg.robjhyndman.com/hdrcde/) developed by [Rob
+Hyndman](https://robjhyndman.com/)
+]
+
+
+.pull-right[
+
+.animated.bounce[
+<img src="images/gghdr_logo.png" height=280px>
+]
+]
+
+
+---
+# HDR boxplots
+
+.pull-left[
+```r
+library(hdrcde)
+hdr.boxplot(faithful$eruptions) 
+```
+<br>
+
+```{r hdrcde-boxplot}
+
+```
+
+]
+
+.pull-right[
+
+```r
+library(gghdr)
+library(ggplot2)
+ggplot(faithful, aes(y = eruptions)) +
+  geom_hdr_boxplot()
+```
+
+```{r geom-hdr-boxplot}
+```
+]
+
+---
+
+# HDR rug plots and scatter plots
+
+
+.pull-left[
+
+```r
+faithful %>% 
+  ggplot(aes(x = waiting, 
+             y = eruptions)) + 
+  geom_hdr_rug(fill = "blue") + 
+  geom_point() 
+```
+
+```{r hdr-rug}
+```
+]
+
+.pull-right[
+
+```r
+faithful %>%
+  ggplot(aes(x = waiting,
+             y = eruptions)) +  
+  geom_point(aes(colour =  
+  hdr_bin(x = waiting,y = eruptions)))
+```
+  
+```{r hdr-scatter}
+```
+
+]
+---
+class: top left
+
+# Keep combining - HDR box + jitter
+
+.pull-left[
+
+```r
+faithful %>% 
+ ggplot(aes(y = eruptions)) + 
+*geom_hdr_boxplot(fill = c("blue")) + 
+*geom_jitter(aes(x = 0))
+```
+- jitter to supplement the insight drawn from the HDR boxplot
+
+]
+
+.pull-right[
+```{r geom-hdr-box-jitter}
+```
+]
+
+
+
+
+---
+class: top left
+
+# Keep combining - HDR scatter + HDR marginal
+
+.pull-left[
+```r
+faithful %>% 
+ggplot(aes(x = waiting, y = eruptions)) +
+* geom_point(aes(colour = hdr_bin(x = waiting, y = eruptions)))+
+* geom_hdr_rug()
+```
+
+- Both bivariate and marginal HDRs displayed at once
+- Bimodality in both marginal and bivariate distributions
+
+]
+
+
+.pull-right[
+
+```{r combo}
+```
+]
+
+---
+
+# Authors
+
+```{r authors}
+
+```
+
+---
+class: middle top
+
+#  More Information
+
+Package: https://github.com/ropenscilabs/gghdr  
+
+Slides: https://sayanigupta-useR2020.netlify.com/  
+
+Materials: https://github.com/Sayani07/useR2020    
+
+
+Slides created with <i> Rmarkdown, knitr, xaringan, xaringanthemer</i>
