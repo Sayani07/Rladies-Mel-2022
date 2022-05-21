@@ -393,5 +393,8 @@ Slides: https://sayanigupta-useR2020.netlify.com/
 
 Materials: https://github.com/Sayani07/useR2020    
 
+Thomas's workshop
+June choe
+Emi tanaka
 
 Slides created with <i> Rmarkdown, knitr, xaringan, xaringanthemer</i>
