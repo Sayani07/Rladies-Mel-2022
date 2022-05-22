@@ -8,7 +8,7 @@ faithful
 p_density <- ggplot(data = faithful, aes(x = eruptions)) + geom_density()
 
 p_hdr <- ggplot(data = faithful,
-                aes(y = eruptions)) + stat_hdrcde()
+                aes(y = eruptions)) + geom_hdr_boxplot()
 
 p_box <- ggplot(data = faithful,
                 aes(y = eruptions)) +
@@ -22,8 +22,8 @@ layer_data(p_box)[1,]
 
 geom_boxplot
 
-class(geom_boxplot()$geom)
-class(geom_boxplot()$stat)
+class(geom_violin()$geom)
+class(geom_violin()$stat)
 class(geom_hdr_boxplot()$geom)
 class(geom_hdr_boxplot()$stat)
 

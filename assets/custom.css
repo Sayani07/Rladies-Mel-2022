@@ -1,6 +1,6 @@
 @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css");
 
-.smaller {font-size: 80%}
+.smaller {font-size: 60%}
 
 .larger {font-size: 120%}
 
@@ -58,7 +58,7 @@ li {
   font-size: 0.4em;
 }
 .remark-inline-code {
-  font-size: 0.4em;
+  font-size: 0.6em;
   color: #6c71c4;
 
 

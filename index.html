@@ -47,10 +47,19 @@ class: top left
 
 # About me
 
+.pull-left[
 - Recently graduated from Monash University
 - visualizations of probability distribution of large temporal data
 - research interest:
 - 2nd talk after covid
+]
+
+
+.pull-right[
+
+![](images/avatar.jpg)&lt;!-- --&gt;
+
+]
 
 ---
 
@@ -120,64 +129,22 @@ customize and integrate new graphical elements with existing ggplot2 visualizati
 ---
 
 
-# What is the challenge(s)
+# Challenge(s)
 
 - Difficult to understand how ggplot2 translates a plot specification into an image
 
 &lt;!-- - ggplot2 interface is different to the structure of the underlying machinery that makes it work. --&gt;
 
-- connecting the underlying theory of ggplot2 and The ggplot2 API
+&lt;!-- connecting the underlying theory of ggplot2 and The ggplot2 API --&gt;
 
 -  guides on ggplot internals are extremely sparse
 
-- there are no smooth entry points for aspiring developers. Even for experienced users, the sheer scale and foreignness is demotivating.
+&lt;!-- - there are no smooth entry points for aspiring developers. Even for experienced users, the sheer scale and foreignness is demotivating. --&gt;
 
-- Do we patiently wait, relying on the mercy and sacrifice of experienced developers to host webinars, release official guides, and hold our hands through this journey?
-
-Or, make a modest start?
+- Wait for experienced developers to host webinars, release official guides before developing ggplot2 extensions OR make a modest start?  
 
 
-
-
-
----
-
-# Making a new stat
-
-- benefits of stats is that they are purely about data transformations, which most R users are used to be doing.
-
-
-- stat is encapsulated in a tiered succession of calls: compute_layer(), compute_panel(), and compute_group()
-
-- Outside of the compute_*() functions, the remaining logic is found in the setup_params() and setup_data() functions
-
-- The setup_params() function receives the parameters given during construction along with the layer data, and returns a modified list of parameters.
-
-- The setup_data() function receives the modified parameters along with the layer data, and returns the modified layer data
-
-
- As a rule of thumb, if the stat operates on multiple rows, start by implementing a compute_group() method, and if the stat operates on single rows, implement a compute_panel() method. 
- 
- Because we’ve written a new stat, we get a number of features, like scaling and faceting, for free:
-
----
-
-# Making a new geom
-
-- The layer need to combine the output of multiple geoms
-
-- The geom needs to return grobs not currently available from existing geoms
-
-- collection of grobs rather than a modified data.frame and this is something outside of the comfort zone of many developers
-
-- Still, Apart from the last point above, it is possible to get by without having to think too much about grid and grobs.
-
-- The main functionality of geoms is, like for stats, a tiered succession of calls: draw_layer(), draw_panel(), and draw_group().
-
-- setup_params()+setup_data() 
-One note, though, is that setup_data() is called before any position adjustment is done as part of the build step.
-
-
+This is me making a modest attempt.
 
 ---
 
@@ -191,7 +158,7 @@ ggplot(faithful, aes(eruptions, waiting)) +
   geom_point()
 ```
 
-![](index_files/figure-html/unnamed-chunk-1-1.png)&lt;!-- --&gt;
+![](index_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
 ]
 
 .pull-right[
@@ -378,10 +345,14 @@ geom_boxplot()
 ---
 
 
-# ggproto
+# ggproto: Object Oriented programming tailor-made for ggplot2 
 
-Object Oriented programming tailor-made for ggplot2 - reference based
 
+![](images/ggproto-factory.png)&lt;!-- --&gt;
+
+
+
+???
 (didn't allow sub-classing objects between packages)
 
 orchetrates all the rendering and mechanics of how ggplot uses the data and convert it into a plot
@@ -390,38 +361,53 @@ orchetrates all the rendering and mechanics of how ggplot uses the data and conv
 kind of factories
 mthods spam the 
 
+---
+
+
+# From data to plot using ggproto
+
+
+![](images/ggproto-methods.png)&lt;!-- --&gt;
+
+
+
+
+
 
 ---
 
-# Subclass an existing class
+# Naming scheme
 
-New ggproto/ Parent ggproto
+Subclass an existing class
 
-## Naming scheme
-
-- The convention for class names is to prefix with the parent (or ancestor) ggproto class name and use upper camel case, e.g. GeomPoint
+The convention for class names is to prefix with the parent (or ancestor) ggproto class name and use upper camel case, e.g. GeomPoint
 
 ---
 
-# Same geom different inputs
+# Examples: Same geom different inputs
 
 .pull-left[
 #### geom_segment()
 
-![](index_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+![](index_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
 
 ]
 
 .pull-right[
 #### geom_spoke()
 
-![](index_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
+![](index_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
 ]
 
 Other examples drawing arrows with [geom_segment(arrow = arrow())](https://ggplot2.tidyverse.org/reference/geom_segment.html) and [geom_quiver()](http://pkg.mitchelloharawild.com/ggquiver/)
+
+
+???
+
+if you’re just drawing transformed data with pre-existing geom, then you can use a Stat.
 ---
 
-# Same stat different geoms
+# Examples: Same stat different geoms
 
 .pull-left[
 ### geom_histogram()
@@ -443,7 +429,7 @@ class(geom_histogram()$geom)
 ## [1] "GeomBar"  "GeomRect" "Geom"     "ggproto"  "gg"
 ```
 
-![](index_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
+![](index_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
 
 ]
 
@@ -467,82 +453,38 @@ class(geom_freqpoly()$geom)
 ## [1] "GeomPath" "Geom"     "ggproto"  "gg"
 ```
 
-![](index_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
+![](index_files/figure-html/unnamed-chunk-16-1.png)&lt;!-- --&gt;
+]
+---
 
+# Examples: New geom by combining existing grobs
+
+## geom_smooth() which combines geom_line() and geom_ribbon()
+
+![](images/mixed-geom.png)&lt;!-- --&gt;
+
+---
+
+class: top left
+
+# Example: Build new stat and new geom
+
+.pull-left[
+
+- R Package gghdr
+- implement Highest Density Region (HDR) plots in ggplot2 
+- inspired from R package [`hdrcde`](https://pkg.robjhyndman.com/hdrcde/) developed by [Rob
+Hyndman](https://robjhyndman.com/)
 ]
 
----
 
-# Combine different grobs
+.pull-right[
 
-An example of this can be seen in geom_smooth() which combines geom_line() and geom_ribbon()
+.animated.bounce[
+&lt;img src="images/gghdr_logo.png" height=280px&gt;
+]
+]
 
-
-
-
-```r
-print(GeomSmooth$draw_group)
-```
-
-```
-## &lt;ggproto method&gt;
-##   &lt;Wrapper function&gt;
-##     function (...) 
-## f(...)
-## 
-##   &lt;Inner function (f)&gt;
-##     function (data, panel_params, coord, se = FALSE, flipped_aes = FALSE) 
-## {
-##     ribbon &lt;- transform(data, colour = NA)
-##     path &lt;- transform(data, alpha = NA)
-##     ymin = flipped_names(flipped_aes)$ymin
-##     ymax = flipped_names(flipped_aes)$ymax
-##     has_ribbon &lt;- se &amp;&amp; !is.null(data[[ymax]]) &amp;&amp; !is.null(data[[ymin]])
-##     gList(if (has_ribbon) 
-##         GeomRibbon$draw_group(ribbon, panel_params, coord, flipped_aes = flipped_aes), 
-##         GeomLine$draw_panel(path, panel_params, coord))
-## }
-```
-
-
----
-
-# Structure of ggplot method
-
-Drawing in ggplot2 involves the following steps
-```
-ggprint &lt;- function(x) {
-  data &lt;- ggplot_build(x) .......(1)
-  gtable &lt;- ggplot_gtable(data)......(2)
-  grid::grid.newpage()
-  grid::grid.draw(gtable)......(3)
-  return(invisible(x))
-}
-```
-
----
-
-# ggbuild -&gt; Build step
-
-ggplot_build(), as discussed above, takes the declarative representation constructed with the public API and augments it by preparing the data for conversion to graphic primitives.
-
-## Data preparation
-
-## Data transformation
-
-## Output
-
----
-# gtable
-
-All drawing is performed by the grid package together with the active graphics device. 
-
-Its job is to convert user data to one or more graphical primitives such as polygons, lines, points, etc and then hand responsibility over to the grid package.
-
-##  Rendering the panels
-
-
-## Adding guides
 ---
 
 # Graphing distribution summaries
@@ -625,6 +567,183 @@ faithful %&gt;% as_tibble
 &lt;img src="images/allplots1png.png" width="90%" /&gt;
 ---
 
+# Extending ggplot2: Action plan?
+
+- HDR is a novel technique for summarizing distribution for which plotting is not implemented in ggplot2
+
+- Sometimes complete story is told my multiple plots and `hdrcde` does not allow for 
+extensive flexibility and customization of plots
+
+- hdr.boxplot() looks close to geom_boxplot(). Compare to answer what your new stat and geom functions should be able to answer
+
+---
+
+# geom_boxplot() vs. hdr.boxplot()
+
+
+&lt;img src="images/boxplot-vs-hdr.png" width="100%" /&gt;
+.smaller[
+.smaller[
+.pull-left[
+*_statistical summaries to display_*
+
+ 1. geom_boxplot(): 5 number summary
+ 2. hdr.boxplot(): 7 summary points
+]
+
+.pull-right[
+*_how to display the summaries_*
+
+ 1. A rectange to represent inter-quartile range, lines to represent median, whiskers and hingers and circles (or maybe points) to represent outliers
+ 
+ 2. (points) to represent outliers and a rectangle to represent the 99% coverage and line representing 50% coverages and modes.
+
+]
+]
+]
+
+---
+# Basic setups 
+
+## New stats
+.large[
+
+
+```r
+StatNEW &lt;- ggproto("StatNEW", Stat,
+                   compute_group = &lt;a function that does computations&gt;,
+                   default_aes = aes(&lt;default values for certain aesthetics&gt;),
+                   required_aes = &lt;a character vector of required aesthetics&gt;)
+```
+]
+
+
+## New geoms
+.large[
+
+```r
+GeomNEW &lt;- ggproto("GeomNEW", Geom,
+        required_aes = &lt;a character vector of required aesthetics&gt;,
+        default_aes = aes(&lt;default values for certain aesthetics&gt;),
+        draw_key = &lt;a function used to draw the key in the legend&gt;,
+        draw_panel = function(data, panel_scales, coord) {
+                ## Function that returns a grid grob that will 
+                ## be plotted (this is where the real work occurs)
+        }
+)
+```
+]
+
+
+
+???
+
+Making a new geom  
+
+ - The layer need to combine the output of multiple geoms
+
+ - The geom needs to return grobs not currently available from existing geoms
+
+ - collection of grobs rather than a modified data.frame and this is something outside of the comfort zone of many developers
+
+ - Still, Apart from the last point above, it is possible to get by without having to think too much about grid and grobs.
+
+- The main functionality of geoms is, like for stats, a tiered succession of calls: draw_layer(), draw_panel(), and draw_group().
+
+- setup_params()+setup_data() 
+One note, though, is that setup_data() is called before any position adjustment is done as part of the build step.
+
+# Making a new stat
+
+- benefits of stats is that they are purely about data transformations, which most R users are used to be doing.
+
+
+- stat is encapsulated in a tiered succession of calls: compute_layer(), compute_panel(), and compute_group()
+
+- Outside of the compute_*() functions, the remaining logic is found in the setup_params() and setup_data() functions
+
+- The setup_params() function receives the parameters given during construction along with the layer data, and returns a modified list of parameters.
+
+- The setup_data() function receives the modified parameters along with the layer data, and returns the modified layer data
+
+
+ As a rule of thumb, if the stat operates on multiple rows, start by implementing a compute_group() method, and if the stat operates on single rows, implement a compute_panel() method. 
+ 
+ Because we’ve written a new stat, we get a number of features, like scaling and faceting, for free:
+
+
+---
+
+???
+
+- need to extend the functionality of ggplot2
+
+Defining features of a circle??
+
+Always subclass an existing class (make a new stat)
+
+Class construction
+data preparation
+calculation
+requirements
+
+
+---
+
+# Essential components: geom_boxplot() vs. hdr.boxplot()
+
+
+## diff compute_group()
+
+[stat-boxplot.R](https://github.com/tidyverse/ggplot2/blob/main/R/stat-boxplot.r)
+
+[geom-boxplot.R](https://github.com/tidyverse/ggplot2/blob/main/R/stat-boxplot.r)
+
+# diff draw_group()
+
+[stat-hdr.R](https://github.com/Sayani07/gghdr/blob/master/R/stat-hdr.R)
+
+[geom-hdr-boxplot.R](https://github.com/Sayani07/gghdr/blob/master/R/geom-hdr-boxplot.R)
+
+---
+# Structure of ggplot method
+
+Drawing in ggplot2 involves the following steps
+
+```
+ggprint &lt;- function(x) {
+  data &lt;- ggplot_build(x) .......(1)
+  gtable &lt;- ggplot_gtable(data)......(2)
+  grid::grid.newpage()
+  grid::grid.draw(gtable)......(3)
+  return(invisible(x))
+}
+```
+
+---
+
+# ggbuild -&gt; Build step
+
+ggplot_build(), as discussed above, takes the declarative representation constructed with the public API and augments it by preparing the data for conversion to graphic primitives.
+
+## Data preparation
+
+## Data transformation
+
+## Output
+
+---
+# gtable
+
+All drawing is performed by the grid package together with the active graphics device. 
+
+Its job is to convert user data to one or more graphical primitives such as polygons, lines, points, etc and then hand responsibility over to the grid package.
+
+##  Rendering the panels
+
+
+## Adding guides
+
 # Developing an extension usually starts with
 
 idea of what to draw!
@@ -640,43 +759,6 @@ What are:
 
 
 
----
-# Extending ggplot2
-
-- HDR is a novel technique for summarizing distribution for which plotting is not implemented in ggplot2
-- ggplot2 creates graphics based on The Grammar of Graphics
-- graphics are built step by step by adding new elements that allows for extensive flexibility and customization of plots
-- need to extend the functionality of ggplot2
-
-Defining features of a circle??
-
-Always subclass an existing class (make a new stat)
-
-Class construction
-data preparation
-calculation
-requirements
-
----
-class: top left
-
-# Package gghdr
-
-.pull-left[
-
-- implement HDR plots in ggplot2 
-- key elements: *geom* and *stats*
-- inspired from R package [`hdrcde`](https://pkg.robjhyndman.com/hdrcde/) developed by [Rob
-Hyndman](https://robjhyndman.com/)
-]
-
-
-.pull-right[
-
-.animated.bounce[
-&lt;img src="images/gghdr_logo.png" height=280px&gt;
-]
-]
 
 
 ---
@@ -786,9 +868,25 @@ ggplot(aes(x = waiting, y = eruptions)) +
 
 ---
 
+
+
+---
+
 # Authors of gghdr
 
 ![](images/authors1.png)&lt;!-- --&gt;
+
+---
+# Reference for extending ggplot2
+
+
+ - https://ggplot2-book.org/programming.html
+ - https://www.youtube.com/watch?v=h29g21z0a68
+ - https://www.youtube.com/watch?v=0m4yywqNPVY
+ - https://yjunechoe.github.io/posts/2020-09-26-demystifying-stat-layers-ggplot2/
+ - https://mran.microsoft.com/snapshot/2015-12-28/web/packages/ggplot2/vignettes/extending-ggplot2.html
+ - https://bookdown.org/rdpeng/RProgDA/building-new-graphical-elements.html
+
 
 ---
 class: middle top
@@ -800,16 +898,6 @@ Package: https://github.com/ropenscilabs/gghdr
 Slides: https://sayanigupta-useR2020.netlify.com/  
 
 Materials: https://github.com/Sayani07/useR2020    
-
-.small[.small[
-https://ggplot2-book.org/programming.html
-https://www.youtube.com/watch?v=h29g21z0a68
-https://www.youtube.com/watch?v=0m4yywqNPVY
-https://yjunechoe.github.io/posts/2020-09-26-demystifying-stat-layers-ggplot2/
-https://mran.microsoft.com/snapshot/2015-12-28/web/packages/ggplot2/vignettes/extending-ggplot2.html
-
-]
-]
 
 Slides created with &lt;i&gt; Rmarkdown, knitr, xaringan, xaringanthemer&lt;/i&gt;
     </textarea>
