@@ -499,43 +499,40 @@
   margin-block-end: 0;
 }
 .header{ font-weight: 900!important; }
-
-h1, h1 .remark-code, h1 code {
-  font-size:38px!important;
+h1 { 
+  font-size:38pt!important;
   font-weight: 900;
 }
-h2, h2 .remark-code, h2 code {
-  font-size:36px!important;
+h2 {
+  font-size:36pt!important;
   font-weight: 800;
 }
-h3, h3 .remark-code, h3 code {
-  font-size:34px!important;
+h3 {
+  font-size:34pt!important;
   font-weight: 700;
 }
-h4, h4 .remark-code, h4 code {
-  font-size:32px!important;
-}
-h5, h5 .remark-code, h5 code {
-  font-size:30px!important;
-}
-h6, h6 .remark-code, h6 code {
-  font-size:28px!important;
-}
+h4 { font-size:32pt!important; }
+h5 { font-size:30pt!important; }
+h6 { font-size:28pt!important; }
 
 
 /* body */
 .remark-slide-content {
   font-family: 'Roboto', sans-serif;
-  font-size: 24px!important;
-  line-height: 1.4;
+  font-size: 24pt!important;
 }
+
+/* body */
+.remark-slide-content {
+  font-family: 'Roboto', sans-serif;
+  font-size: 24pt!important;
+}
+
 
 /* code */
 
 .remark-code, code {
   font-family: 'Roboto Mono', sans-serif;
   font-variant-ligatures: none;
-  line-height: 1.4;
-  color: #006DAE;
-  font-size: 24px!important;
+  line-height: 1.5;
 }
