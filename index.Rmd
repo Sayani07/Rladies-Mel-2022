@@ -11,16 +11,17 @@ output:
     after_body: ["libs/collapseoutput.js"]
     css:
       - ninjutsu 
+      - "assets/font-awesome-all.css"
+      - "assets/tachyons-addon.css"
       - "assets/animate.css"
-      - "assets/monash-logo.css"
+      - "assets/fira-code.css"
+      - "assets/boxes.css"
+      - "assets/styles.css"
       - "assets/monash-brand.css"
       - "assets/monash-fonts.css"
-      - "assets/styles.css" # small improvements
-      - "assets/custom.css" # add your own CSS here!
-      - "assets/demo.css" # this should be removed
-      - "timeline.css"
-      - "libs/font-awesome/css/fontawesome-all.css"
-    # [ "libs/myremark.css", "xaringan-themer.css" , "libs/font-awesome/css/fontawesome-all.css"]
+      - "assets/slide-types.css"
+      - "assets/table.css"
+      - "assets/custom.css"
     self_contained: false
     lib_dir: libs
     includes:
@@ -41,6 +42,8 @@ knitr::read_chunk('R/main.R')
 knitr::read_chunk('R/theme.R')
 ```
 
+
+
 ```{r load}
 ```
 
@@ -48,16 +51,26 @@ class: top left
 
 # About me
 
----
-
-# Object-oriented programming
-
-building tools for data analysis
-
----
-# Data example we will play with 
+- Recently graduated from Monash University
+- visualizations of probability distribution of large temporal data
+- research interest:
+- 2nd talk after covid
 
 ---
+
+
+# What is the challenge(s)
+
+- Difficult to understand how ggplot2 translates a plot specification into an image.
+- ggplot2 interface is different to the structure of the underlying machinery that makes it work.
+
+---
+
+# Data example we will play with
+
+
+---
+
 # Decomposing (Extension points) a ggplot into its consituents
 
 - Theme
@@ -92,14 +105,138 @@ complete story told my multiple plots
 
 Gallery for ggplot2 extensions
 https://exts.ggplot2.tidyverse.org/gallery/
----
-
-# What is the challenge(s)
-
-- Difficult to understand how ggplot2 translates a plot specification into an image.
-- ggplot2 interface is different to the structure of the underlying machinery that makes it work.
 
 ---
+
+
+# What is the role of Stat in all of this?
+
+- Even though data is tidy, may not represent te values you want to display
+
+- Do not transform your already tidy data so that it contains those values
+
+- pass your original tidy data into ggplot() as in and allow stat_*() functions to apply transformations internally
+
+- stat_* customised for both their geoms and their transformation functions and works similar to geom_*() functions in other regards
+
+- If you want to use a different geom, make sure that your transformation function calculates all the required aesthetics for that geom
+
+---
+
+# Stat and Geom require each other
+
+`stat_*()` and `geom_*()` are simply convenient instances of the layer() function that builds up the layers of ggplot.
+
+.footnote[
+> Unfortunately, due to an early design mistake I called these either stat_() or geom_(). A better decision would have been to call them layer_() functions: that’s a more accurate description because every layer involves a stat and a geom.
+
+]
+
+---
+
+# First place we are gonna begin
+## Each geom layer is a stand-alone function
+
+.pull-left[
+```{r, echo = TRUE}
+ggplot(faithful, aes(eruptions, waiting)) + 
+  geom_point()
+```
+]
+
+.pull-right[
+```{r, echo = TRUE}
+geom_point()
+```
+
+
+```{r, echo = TRUE}
+str(geom_point())
+```
+
+
+- instance of a "layer" class
+- layer consisting of a type of stat, geom and position
+- layer is a list of different methods: functions that are defined for the geom_point() layer
+]
+
+
+---
+# geom_*() aliases for layer() function
+
+## layer function specifies geom and stat
+
+.pull-left[
+.scroll-sign.f5[
+.overflow-scroll.h5[
+
+```{r, echo = TRUE}
+names(as.list(geom_point()))
+```
+]]
+
+
+.scroll-sign.f5[
+.overflow-scroll.h5[
+```{r echo = TRUE}
+ggplot2::layer(
+  geom = GeomPoint,
+  stat = StatIdentity,
+  position = PositionIdentity
+)
+```
+]]
+
+{{content}}
+]
+
+.pull-right[
+
+.scroll-sign.f5[
+.overflow-scroll.h5[
+
+```{r, echo = TRUE}
+ggplot2::layer(
+  geom = GeomBoxplot,
+  stat = StatBoxplot,
+  position = PositionIdentity
+)
+```
+
+]]
+
+
+.scroll-sign.f5[
+.overflow-scroll.h5[
+
+```{r, echo = TRUE}
+geom_boxplot()
+```
+
+
+]]
+{{content}}
+]
+
+---
+
+---
+
+# ggproto
+
+basics: 
+
+---
+
+# Subclass an existing class
+
+New ggproto/ Parent ggproto
+
+
+- The convention for class names is to prefix with the parent (or ancestor) ggproto class name and use upper camel case, e.g. GeomPoint
+
+---
+
 
 # Play with some geom
 

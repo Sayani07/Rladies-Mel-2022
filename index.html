@@ -10,15 +10,17 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> 
     -->
     <link rel="icon" href="images/favicon.ico"  type='image/x-icon'/>    
+    <link rel="stylesheet" href="assets/font-awesome-all.css" type="text/css" />
+    <link rel="stylesheet" href="assets/tachyons-addon.css" type="text/css" />
     <link rel="stylesheet" href="assets/animate.css" type="text/css" />
-    <link rel="stylesheet" href="assets/monash-logo.css" type="text/css" />
+    <link rel="stylesheet" href="assets/fira-code.css" type="text/css" />
+    <link rel="stylesheet" href="assets/boxes.css" type="text/css" />
+    <link rel="stylesheet" href="assets/styles.css" type="text/css" />
     <link rel="stylesheet" href="assets/monash-brand.css" type="text/css" />
     <link rel="stylesheet" href="assets/monash-fonts.css" type="text/css" />
-    <link rel="stylesheet" href="assets/styles.css" type="text/css" />
+    <link rel="stylesheet" href="assets/slide-types.css" type="text/css" />
+    <link rel="stylesheet" href="assets/table.css" type="text/css" />
     <link rel="stylesheet" href="assets/custom.css" type="text/css" />
-    <link rel="stylesheet" href="assets/demo.css" type="text/css" />
-    <link rel="stylesheet" href="timeline.css" type="text/css" />
-    <link rel="stylesheet" href="libs/font-awesome/css/fontawesome-all.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
@@ -41,20 +43,32 @@ class: center, middle, inverse, title-slide
 
 
 
+
+
 class: top left
 
 # About me
 
----
-
-# Object-oriented programming
-
-building tools for data analysis
-
----
-# Data example we will play with 
+- Recently graduated from Monash University
+- visualizations of probability distribution of large temporal data
+- research interest:
+- 2nd talk after covid
 
 ---
+
+
+# What is the challenge(s)
+
+- Difficult to understand how ggplot2 translates a plot specification into an image.
+- ggplot2 interface is different to the structure of the underlying machinery that makes it work.
+
+---
+
+# Data example we will play with
+
+
+---
+
 # Decomposing (Extension points) a ggplot into its consituents
 
 - Theme
@@ -89,14 +103,248 @@ complete story told my multiple plots
 
 Gallery for ggplot2 extensions
 https://exts.ggplot2.tidyverse.org/gallery/
----
-
-# What is the challenge(s)
-
-- Difficult to understand how ggplot2 translates a plot specification into an image.
-- ggplot2 interface is different to the structure of the underlying machinery that makes it work.
 
 ---
+
+
+# What is the role of Stat in all of this?
+
+- Even though data is tidy, may not represent te values you want to display
+
+- Do not transform your already tidy data so that it contains those values
+
+- pass your original tidy data into ggplot() as in and allow stat_*() functions to apply transformations internally
+
+- stat_* customised for both their geoms and their transformation functions and works similar to geom_*() functions in other regards
+
+- If you want to use a different geom, make sure that your transformation function calculates all the required aesthetics for that geom
+
+---
+
+# Stat and Geom require each other
+
+`stat_*()` and `geom_*()` are simply convenient instances of the layer() function that builds up the layers of ggplot.
+
+.footnote[
+&gt; Unfortunately, due to an early design mistake I called these either stat_() or geom_(). A better decision would have been to call them layer_() functions: that’s a more accurate description because every layer involves a stat and a geom.
+
+]
+
+---
+
+# First place we are gonna begin
+## Each geom layer is a stand-alone function
+
+.pull-left[
+
+```r
+ggplot(faithful, aes(eruptions, waiting)) + 
+  geom_point()
+```
+
+![](index_files/figure-html/unnamed-chunk-1-1.png)&lt;!-- --&gt;
+]
+
+.pull-right[
+
+```r
+geom_point()
+```
+
+```
+## geom_point: na.rm = FALSE
+## stat_identity: na.rm = FALSE
+## position_identity
+```
+
+
+
+```r
+str(geom_point())
+```
+
+```
+## Classes 'LayerInstance', 'Layer', 'ggproto', 'gg' &lt;ggproto object: Class LayerInstance, Layer, gg&gt;
+##     aes_params: list
+##     compute_aesthetics: function
+##     compute_geom_1: function
+##     compute_geom_2: function
+##     compute_position: function
+##     compute_statistic: function
+##     computed_geom_params: NULL
+##     computed_mapping: NULL
+##     computed_stat_params: NULL
+##     data: waiver
+##     draw_geom: function
+##     finish_statistics: function
+##     geom: &lt;ggproto object: Class GeomPoint, Geom, gg&gt;
+##         aesthetics: function
+##         default_aes: uneval
+##         draw_group: function
+##         draw_key: function
+##         draw_layer: function
+##         draw_panel: function
+##         extra_params: na.rm
+##         handle_na: function
+##         non_missing_aes: size shape colour
+##         optional_aes: 
+##         parameters: function
+##         required_aes: x y
+##         setup_data: function
+##         setup_params: function
+##         use_defaults: function
+##         super:  &lt;ggproto object: Class Geom, gg&gt;
+##     geom_params: list
+##     inherit.aes: TRUE
+##     layer_data: function
+##     map_statistic: function
+##     mapping: NULL
+##     position: &lt;ggproto object: Class PositionIdentity, Position, gg&gt;
+##         compute_layer: function
+##         compute_panel: function
+##         required_aes: 
+##         setup_data: function
+##         setup_params: function
+##         super:  &lt;ggproto object: Class Position, gg&gt;
+##     print: function
+##     setup_layer: function
+##     show.legend: NA
+##     stat: &lt;ggproto object: Class StatIdentity, Stat, gg&gt;
+##         aesthetics: function
+##         compute_group: function
+##         compute_layer: function
+##         compute_panel: function
+##         default_aes: uneval
+##         extra_params: na.rm
+##         finish_layer: function
+##         non_missing_aes: 
+##         optional_aes: 
+##         parameters: function
+##         required_aes: 
+##         retransform: TRUE
+##         setup_data: function
+##         setup_params: function
+##         super:  &lt;ggproto object: Class Stat, gg&gt;
+##     stat_params: list
+##     super:  &lt;ggproto object: Class Layer, gg&gt;
+```
+
+
+- instance of a "layer" class
+- layer consisting of a type of stat, geom and position
+- layer is a list of different methods: functions that are defined for the geom_point() layer
+]
+
+
+---
+# geom_*() aliases for layer() function
+
+## layer function specifies geom and stat
+
+.pull-left[
+.scroll-sign.f5[
+.overflow-scroll.h5[
+
+
+```r
+names(as.list(geom_point()))
+```
+
+```
+##  [1] "mapping"              "geom_params"          "layer_data"          
+##  [4] "compute_statistic"    "computed_mapping"     "compute_aesthetics"  
+##  [7] "stat_params"          "map_statistic"        "draw_geom"           
+## [10] "stat"                 "setup_layer"          "inherit.aes"         
+## [13] "finish_statistics"    "geom"                 "compute_position"    
+## [16] "position"             "print"                "data"                
+## [19] "aes_params"           "computed_stat_params" "computed_geom_params"
+## [22] "compute_geom_1"       "compute_geom_2"       "show.legend"
+```
+]]
+
+
+.scroll-sign.f5[
+.overflow-scroll.h5[
+
+```r
+ggplot2::layer(
+  geom = GeomPoint,
+  stat = StatIdentity,
+  position = PositionIdentity
+)
+```
+
+```
+## geom_point: na.rm = FALSE
+## stat_identity: na.rm = FALSE
+## position_identity
+```
+]]
+
+{{content}}
+]
+
+.pull-right[
+
+.scroll-sign.f5[
+.overflow-scroll.h5[
+
+
+```r
+ggplot2::layer(
+  geom = GeomBoxplot,
+  stat = StatBoxplot,
+  position = PositionIdentity
+)
+```
+
+```
+## geom_boxplot: na.rm = FALSE
+## stat_boxplot: na.rm = FALSE
+## position_identity
+```
+
+]]
+
+
+.scroll-sign.f5[
+.overflow-scroll.h5[
+
+
+```r
+geom_boxplot()
+```
+
+```
+## geom_boxplot: outlier.colour = NULL, outlier.fill = NULL, outlier.shape = 19, outlier.size = 1.5, outlier.stroke = 0.5, outlier.alpha = NULL, notch = FALSE, notchwidth = 0.5, varwidth = FALSE, na.rm = FALSE, orientation = NA
+## stat_boxplot: na.rm = FALSE, orientation = NA
+## position_dodge2
+```
+
+
+]]
+{{content}}
+]
+
+---
+
+---
+
+# ggproto
+
+basics: 
+
+---
+
+# Subclass an existing class
+
+New ggproto/ Parent ggproto
+
+
+- The convention for class names is to prefix with the parent (or ancestor) ggproto class name and use upper camel case, e.g. GeomPoint
+
+---
+
 
 # Play with some geom
 
@@ -391,6 +639,9 @@ Slides: https://sayanigupta-useR2020.netlify.com/
 
 Materials: https://github.com/Sayani07/useR2020    
 
+Thomas's workshop
+June choe
+Emi tanaka
 
 Slides created with &lt;i&gt; Rmarkdown, knitr, xaringan, xaringanthemer&lt;/i&gt;
     </textarea>
