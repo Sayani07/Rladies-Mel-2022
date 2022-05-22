@@ -273,7 +273,16 @@ geom_boxplot()
 
 # ggproto
 
-basics: 
+Object Oriented programming tailor-made for ggplot2 - reference based
+
+(didn't allow sub-classing objects between packages)
+
+orchetrates all the rendering and mechanics of how ggplot uses the data and convert it into a plot
+
+
+kind of factories
+mthods spam the 
+
 
 ---
 
@@ -287,19 +296,72 @@ New ggproto/ Parent ggproto
 
 ---
 
+# Same geom different inputs
 
-# Play with some geom
+.pull-left[
+#### geom_segment()
 
-## Same geom different input expecatations
+```{r, echo = FALSE}
+b <- ggplot(mtcars, aes(wt, mpg)) +
+  geom_point()
 
-Show same stat and geoms are different giving it a different geometry
+df <- data.frame(x1 = 2.62, x2 = 3.57, y1 = 21.0, y2 = 15.0)
+b  +
+ geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2), data = df)
+
+```
+
+]
+
+.pull-right[
+#### geom_spoke()
+
+```{r, echo = FALSE}
+df <- expand.grid(x = 1:10, y=1:10)
+df$angle <- runif(100, 0, 2*pi)
+df$speed <- runif(100, 0, sqrt(0.1 * df$x))
+
+ggplot(df, aes(x, y)) +
+  geom_point() +
+  geom_spoke(aes(angle = angle), radius = 0.5)
+```
+]
+
+Other examples drawing arrows with [geom_segment(arrow = arrow())](https://ggplot2.tidyverse.org/reference/geom_segment.html) and [geom_quiver()](http://pkg.mitchelloharawild.com/ggquiver/)
 ---
 
-# Play with some stat
+# Same stat different geoms
 
-## Different geom with same input expecatation
+.pull-left[
+### geom_histogram()
 
-Show same stat and geoms are different giving it a different stat
+```{r, echo = TRUE}
+class(geom_histogram()$stat)
+class(geom_histogram()$geom)
+```
+
+```{r, echo = FALSE}
+ggplot(diamonds, aes(price, fill = cut)) +
+  geom_histogram(binwidth = 500)
+```
+
+]
+
+.pull-right[
+### geom_freqpoly()
+
+```{r, echo = TRUE}
+class(geom_freqpoly()$stat)
+class(geom_freqpoly()$geom)
+```
+
+```{r, echo = FALSE}
+ggplot(diamonds, aes(price, colour = cut)) +
+  geom_freqpoly(binwidth = 500)
+
+```
+
+]
 
 ---
 

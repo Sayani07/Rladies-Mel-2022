@@ -380,7 +380,16 @@ geom_boxplot()
 
 # ggproto
 
-basics: 
+Object Oriented programming tailor-made for ggplot2 - reference based
+
+(didn't allow sub-classing objects between packages)
+
+orchetrates all the rendering and mechanics of how ggplot uses the data and convert it into a plot
+
+
+kind of factories
+mthods spam the 
+
 
 ---
 
@@ -394,19 +403,73 @@ New ggproto/ Parent ggproto
 
 ---
 
+# Same geom different inputs
 
-# Play with some geom
+.pull-left[
+#### geom_segment()
 
-## Same geom different input expecatations
+![](index_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
 
-Show same stat and geoms are different giving it a different geometry
+]
+
+.pull-right[
+#### geom_spoke()
+
+![](index_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
+]
+
+Other examples drawing arrows with [geom_segment(arrow = arrow())](https://ggplot2.tidyverse.org/reference/geom_segment.html) and [geom_quiver()](http://pkg.mitchelloharawild.com/ggquiver/)
 ---
 
-# Play with some stat
+# Same stat different geoms
 
-## Different geom with same input expecatation
+.pull-left[
+### geom_histogram()
 
-Show same stat and geoms are different giving it a different stat
+
+```r
+class(geom_histogram()$stat)
+```
+
+```
+## [1] "StatBin" "Stat"    "ggproto" "gg"
+```
+
+```r
+class(geom_histogram()$geom)
+```
+
+```
+## [1] "GeomBar"  "GeomRect" "Geom"     "ggproto"  "gg"
+```
+
+![](index_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
+
+]
+
+.pull-right[
+### geom_freqpoly()
+
+
+```r
+class(geom_freqpoly()$stat)
+```
+
+```
+## [1] "StatBin" "Stat"    "ggproto" "gg"
+```
+
+```r
+class(geom_freqpoly()$geom)
+```
+
+```
+## [1] "GeomPath" "Geom"     "ggproto"  "gg"
+```
+
+![](index_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
+
+]
 
 ---
 
