@@ -270,18 +270,67 @@ class: top left
 
 ---
 
-# Different summarization expose different features
+# Why HDR? Different summarization expose different features
 
-.left-column[
-- Boxplot not suitable for summarizing multi-modal distributions
-- often useful to display different summarization in unison
+&lt;i&gt;&lt;font size = "4"&gt; Data set: Waiting time between eruptions and the duration of the eruption for the Old Faithful geyser in Yellowstone National Park, Wyoming, USA. &lt;/font size = "4"&gt;&lt;/i&gt;
+
+.pull-left[
+```r
+faithful %&gt;% as_tibble
+```
+
+
+```
+## # A tibble: 272 × 2
+##    eruptions waiting
+##        &lt;dbl&gt;   &lt;dbl&gt;
+##  1      3.6       79
+##  2      1.8       54
+##  3      3.33      74
+##  4      2.28      62
+##  5      4.53      85
+##  6      2.88      55
+##  7      4.7       88
+##  8      3.6       85
+##  9      1.95      51
+## 10      4.35      85
+## # … with 262 more rows
+```
+
 ]
 
-.right-column[
-![](images/question1.png)&lt;!-- --&gt;
+.pull-right[
+![](index_files/figure-html/faithful-density-1.png)&lt;!-- --&gt;
 ]
+
+Boxplot not suitable for summarizing multi-modal distributions
+---
+
+background-image: url("images/hdr_paper.png")
+
+background-position: center
+background-size: contain
+
 
 ---
+# Highest Density Region (HDR) plots
+
+&lt;font size = "3.5"&gt; If `\(f(x)\)` is the density function of a random variable `\(X\)`, then the 100 `\((1 -\alpha)\)` HDR is the subset `\(R(f_\alpha)\)` of the sample space of `\(X\)` such that `\(R(f_\alpha) = \{x: f(x) \geq f_\alpha\}\)`, where `\(f_\alpha\)` is the largest constant such that `\(Pr(X \in R(f_\alpha)) \geq 1-\alpha)\)`.
+
+&lt;img src="images/falpha.png" width="80%" /&gt;
+
+---
+
+# Other gghdr capabilities
+
+&lt;img src="images/allplots1png.png" width="90%" /&gt;
+
+.smaller[
+Know more at: https://sayani07.github.io/gghdr/
+]
+---
+
+
 # First place we are gonna begin
 ## Each geom layer is a stand-alone function
 
@@ -596,90 +645,9 @@ class: top left
 
 # Example: Build new stat and new geom
 
-.pull-left[
-
-- R Package gghdr
-- implement Highest Density Region (HDR) plots in ggplot2 
-- inspired from R package [`hdrcde`](https://pkg.robjhyndman.com/hdrcde/) developed by [Rob
-Hyndman](https://robjhyndman.com/)
-]
-
-
-.pull-right[
-
-.animated.bounce[
-&lt;img src="images/gghdr_logo.png" height=280px&gt;
-]
-]
 
 ---
 class: top left
-
-# Different summarization expose different features
-
-.left-column[
-- Boxplot not suitable for summarizing multi-modal distributions
-- often useful to display different summarization in unison
-]
-
-.right-column[
-![](images/question1.png)&lt;!-- --&gt;
-]
----
-
-background-image: url("images/hdr_paper.png")
-
-background-position: center
-background-size: contain
-
-
----
-# Highest Density Region (HDR) plots
-
-&lt;font size = "3.5"&gt; If `\(f(x)\)` is the density function of a random variable `\(X\)`, then the 100 `\((1 -\alpha)\)` HDR is the subset `\(R(f_\alpha)\)` of the sample space of `\(X\)` such that `\(R(f_\alpha) = \{x: f(x) \geq f_\alpha\}\)`, where `\(f_\alpha\)` is the largest constant such that `\(Pr(X \in R(f_\alpha)) \geq 1-\alpha)\)`.
-
-&lt;img src="images/falpha.png" width="80%" /&gt;
-
----
-# Graphing HDRs using R package hdrcde
-
-&lt;i&gt;&lt;font size = "4"&gt; Data set: Waiting time between eruptions and the duration of the eruption for the Old Faithful geyser in Yellowstone National Park, Wyoming, USA. &lt;/font size = "4"&gt;&lt;/i&gt;
-
-.pull-left[
-```r
-faithful %&gt;% as_tibble
-```
-
-
-```
-## # A tibble: 272 × 2
-##    eruptions waiting
-##        &lt;dbl&gt;   &lt;dbl&gt;
-##  1      3.6       79
-##  2      1.8       54
-##  3      3.33      74
-##  4      2.28      62
-##  5      4.53      85
-##  6      2.88      55
-##  7      4.7       88
-##  8      3.6       85
-##  9      1.95      51
-## 10      4.35      85
-## # … with 262 more rows
-```
-
-]
-
-.pull-right[
-![](index_files/figure-html/faithful-density-1.png)&lt;!-- --&gt;
-]
-
----
-
-# Graphing HDRs using R package hdrcde
-
-&lt;img src="images/allplots1png.png" width="90%" /&gt;
----
 
 # Extending ggplot2
 

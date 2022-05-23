@@ -256,19 +256,55 @@ class: top left
 
 ---
 
-# Different summarization expose different features
+# Why HDR? Different summarization expose different features
 
-.left-column[
-- Boxplot not suitable for summarizing multi-modal distributions
-- often useful to display different summarization in unison
+<i><font size = "4"> Data set: Waiting time between eruptions and the duration of the eruption for the Old Faithful geyser in Yellowstone National Park, Wyoming, USA. </font size = "4"></i>
+
+.pull-left[
+```r
+faithful %>% as_tibble
+```
+
+```{r print-data}
+```
+
 ]
 
-.right-column[
-```{r question1png}
+.pull-right[
+```{r faithful-density}
 ```
 ]
 
+Boxplot not suitable for summarizing multi-modal distributions
 ---
+
+background-image: url("images/hdr_paper.png")
+
+background-position: center
+background-size: contain
+
+
+---
+# Highest Density Region (HDR) plots
+
+<font size = "3.5"> If $f(x)$ is the density function of a random variable $X$, then the 100 $(1 -\alpha)$ HDR is the subset $R(f_\alpha)$ of the sample space of $X$ such that $R(f_\alpha) = \{x: f(x) \geq f_\alpha\}$, where $f_\alpha$ is the largest constant such that $Pr(X \in R(f_\alpha)) \geq 1-\alpha)$.
+
+```{r falpha, out.width="80%"}
+```
+
+---
+
+# Other gghdr capabilities
+
+```{r hdrcde, out.width="90%"}
+```
+
+.smaller[
+Know more at: https://sayani07.github.io/gghdr/
+]
+---
+
+
 # First place we are gonna begin
 ## Each geom layer is a stand-alone function
 
@@ -478,79 +514,9 @@ class: top left
 
 # Example: Build new stat and new geom
 
-.pull-left[
-
-- R Package gghdr
-- implement Highest Density Region (HDR) plots in ggplot2 
-- inspired from R package [`hdrcde`](https://pkg.robjhyndman.com/hdrcde/) developed by [Rob
-Hyndman](https://robjhyndman.com/)
-]
-
-
-.pull-right[
-
-.animated.bounce[
-<img src="images/gghdr_logo.png" height=280px>
-]
-]
 
 ---
 class: top left
-
-# Different summarization expose different features
-
-.left-column[
-- Boxplot not suitable for summarizing multi-modal distributions
-- often useful to display different summarization in unison
-]
-
-.right-column[
-```{r question1png}
-```
-]
----
-
-background-image: url("images/hdr_paper.png")
-
-background-position: center
-background-size: contain
-
-
----
-# Highest Density Region (HDR) plots
-
-<font size = "3.5"> If $f(x)$ is the density function of a random variable $X$, then the 100 $(1 -\alpha)$ HDR is the subset $R(f_\alpha)$ of the sample space of $X$ such that $R(f_\alpha) = \{x: f(x) \geq f_\alpha\}$, where $f_\alpha$ is the largest constant such that $Pr(X \in R(f_\alpha)) \geq 1-\alpha)$.
-
-```{r falpha, out.width="80%"}
-```
-
----
-# Graphing HDRs using R package hdrcde
-
-<i><font size = "4"> Data set: Waiting time between eruptions and the duration of the eruption for the Old Faithful geyser in Yellowstone National Park, Wyoming, USA. </font size = "4"></i>
-
-.pull-left[
-```r
-faithful %>% as_tibble
-```
-
-```{r print-data}
-```
-
-]
-
-.pull-right[
-```{r faithful-density}
-```
-]
-
----
-
-# Graphing HDRs using R package hdrcde
-
-```{r hdrcde, out.width="90%"}
-```
----
 
 # Extending ggplot2
 

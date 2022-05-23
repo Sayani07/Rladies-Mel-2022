@@ -216,7 +216,10 @@ p1 <- ggplot(data = faithful, aes(x = eruptions)) + geom_density() + theme_remar
 p2 <- ggplot(data = faithful, aes(y = eruptions)) +
   geom_boxplot() + theme_remark()  + coord_flip()
 
-ggarrange(p1, p2, nrow = 2, ncol = 1)
+p3 <- ggplot(data = faithful, aes(y = eruptions)) +
+  geom_hdr_boxplot() + theme_remark()  + coord_flip()
+
+ggarrange(p1, p2, p3, nrow = 3, ncol = 1)
 
 ##----allplotspng
 
