@@ -3,7 +3,7 @@
   <head>
     <title>Building a new geom in ggplot2</title>
     <meta charset="utf-8" />
-    <meta name="author" content="  Sayani Gupta    Sayani07      SayaniGupta07   https://sayanigupta-useR2020.netlify.com/" />
+    <meta name="author" content="  Sayani Gupta    Sayani07      SayaniGupta07   https://sayanigupta-rladies22.netlify.app/" />
     <script src="libs/header-attrs-2.14/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/ninjutsu.css" rel="stylesheet" />
     <!--
@@ -28,7 +28,7 @@ class: center, middle, inverse, title-slide
 # Building a new geom in ggplot2
 ]
 .author[
-### <br> Sayani Gupta <br> <i class='fab fa-github'></i> Sayani07     <i class='fab fa-twitter' style='color:#6CADDE'></i> SayaniGupta07 <br><font> <small><a href="https://sayanigupta-useR2020.netlify.com/" class="uri">https://sayanigupta-useR2020.netlify.com/</a></small>
+### <br> Sayani Gupta <br> <i class='fab fa-github'></i> Sayani07     <i class='fab fa-twitter' style='color:#6CADDE'></i> SayaniGupta07 <br><font> <small><a href="https://sayanigupta-rladies22.netlify.app/" class="uri">https://sayanigupta-rladies22.netlify.app/</a></small>
 ]
 .date[
 ### <font size = "7"> R-Ladies Melbourne
@@ -60,11 +60,6 @@ class: top left
 ![](images/avatar.jpg)&lt;!-- --&gt;
 
 ]
-
----
-
-# Data example we will play with
-
 
 ---
 
@@ -583,21 +578,21 @@ faithful %&gt;% as_tibble
 - Sometimes complete story is told my multiple plots and `hdrcde` does not allow for 
 extensive flexibility and customization of plots
 
+---
 #  Action plan?
+ - Developing an extension usually starts with idea of what to draw!
+ - If your desired geom looks similar to an existing geom, start from there.
+ .smaller[
 
-- Developing an extension usually starts with idea of what to draw!
-
-- If your desired geom looks similar to an existing geom, start from there.
   - hdr.boxplot() looks similar to geom_boxplot()
   - geom_hdr_rug() looks like a combination of geom_rect() and geom_segment()
-
-- Subclass an existing class
-
-- Naming scheme: The convention for class names is to prefix with the parent (or ancestor) ggproto class name and use upper camel case, e.g. GeomPoint
+       ]
+ - Subclass one of the existing main ggproto classes
+ - Naming scheme: The convention for class names is to prefix with the parent (or ancestor) ggproto class name and use upper camel case, e.g. GeomPoint
 
 ---
 
-# geom_boxplot() vs. hdr.boxplot()
+# Let's go: geom_boxplot() vs. hdr.boxplot()
 
 
 &lt;img src="images/boxplot-vs-hdr.png" width="100%" /&gt;
@@ -691,8 +686,6 @@ One note, though, is that setup_data() is called before any position adjustment 
  Because we’ve written a new stat, we get a number of features, like scaling and faceting, for free:
 
 
----
-
 ???
 
 - need to extend the functionality of ggplot2
@@ -705,7 +698,6 @@ Class construction
 data preparation
 calculation
 requirements
-
 
 ---
 
@@ -725,59 +717,19 @@ requirements
 [geom-hdr-boxplot.R](https://github.com/Sayani07/gghdr/blob/master/R/geom-hdr-boxplot.R)
 
 ---
-# Structure of ggplot method
 
-Drawing in ggplot2 involves the following steps
+background-image: url("images/compute-group.png")
 
-```
-ggprint &lt;- function(x) {
-  data &lt;- ggplot_build(x) .......(1)
-  gtable &lt;- ggplot_gtable(data)......(2)
-  grid::grid.newpage()
-  grid::grid.draw(gtable)......(3)
-  return(invisible(x))
-}
-```
+background-position: center
+background-size: contain
+
 
 ---
 
-# ggbuild -&gt; Build step
+background-image: url("images/draw-panel.png")
 
-ggplot_build(), as discussed above, takes the declarative representation constructed with the public API and augments it by preparing the data for conversion to graphic primitives.
-
-## Data preparation
-
-## Data transformation
-
-## Output
-
----
-# gtable
-
-All drawing is performed by the grid package together with the active graphics device. 
-
-Its job is to convert user data to one or more graphical primitives such as polygons, lines, points, etc and then hand responsibility over to the grid package.
-
-##  Rendering the panels
-
-
-## Adding guides
-
-# Developing an extension usually starts with
-
-idea of what to draw!
-
-if you’re just drawing transformed data with pre-existing geom, then you can use a Stat.
-
-What are:
-* the geoms
-* the stats
-* the coord
-* the data
-
-
-
-
+background-position: center
+background-size: contain
 
 
 ---
@@ -858,9 +810,6 @@ faithful %&gt;%
 ![](index_files/figure-html/geom-hdr-box-jitter-1.png)&lt;!-- --&gt;
 ]
 
-
-
-
 ---
 class: top left
 
@@ -884,8 +833,6 @@ ggplot(aes(x = waiting, y = eruptions)) +
 
 ![](index_files/figure-html/combo-1.png)&lt;!-- --&gt;
 ]
-
----
 
 
 
@@ -912,11 +859,11 @@ class: middle top
 
 #  More Information
 
-Package: https://github.com/ropenscilabs/gghdr  
+Package: https://github.com/Sayani07/gghdr 
 
-Slides: https://sayanigupta-useR2020.netlify.com/  
+Slides: hhttps://sayanigupta-rladies22.netlify.app/  
 
-Materials: https://github.com/Sayani07/useR2020    
+Materials: https://github.com/Sayani07/Rladies-Mel-2022/
 
 Slides created with &lt;i&gt; Rmarkdown, knitr, xaringan, xaringanthemer&lt;/i&gt;
     </textarea>
