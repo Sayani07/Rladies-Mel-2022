@@ -212,11 +212,11 @@ https://exts.ggplot2.tidyverse.org/gallery/
 
 - Guides on ggplot internals are not yet so ubiquitous
 
-- But it is possible! We did it and the package is currently on CRAN
+- But it is possible! We did it and so can you.
 
-- Start small and get help
 ]
 ???
+- Start small and get help
 
 - Wait for experienced developers to host webinars, release official guides before on ggplot2 extensions OR make a modest start?  
 
@@ -236,14 +236,14 @@ https://exts.ggplot2.tidyverse.org/gallery/
 
 class: top left
 
-# Example: Build new stat and new geom
+# Package gghdr
 
 .pull-left[
 
-- R Package gghdr
+- gghdr currently on CRAN
 - implement Highest Density Region (HDR) plots in ggplot2 
-- inspired from R package [`hdrcde`](https://pkg.robjhyndman.com/hdrcde/) developed by [Rob
-Hyndman](https://robjhyndman.com/)
+- inspired from R package [hdrcde](https://pkg.robjhyndman.com/hdrcde/)
+- hdrcde does not allow for flexibility and customization of plots
 ]
 
 
