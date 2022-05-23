@@ -112,6 +112,10 @@ customize and integrate new graphical elements with existing ggplot2 visualizati
 
 # What is the role of Stat in all of this?
 
+show layer_data for different geoms
+
+???
+
 - Even though data is tidy, may not represent te values you want to display
 
 - Do not transform your already tidy data so that it contains those values
@@ -123,13 +127,58 @@ customize and integrate new graphical elements with existing ggplot2 visualizati
 - If you want to use a different geom, make sure that your transformation function calculates all the required aesthetics for that geom
 ---
 
+#  From plot specification to plot image
 
-# Stat and Geom require each other
+.pull-left[
+```{r plot-spec, echo = TRUE, eval = FALSE}
+p <- ggplot(mpg, 
+            aes(displ, hwy, 
+                color = drv)) +
+  geom_point(position = "jitter") +
+  geom_smooth(method = "lm", 
+              formula = y ~ x) +
+  facet_wrap(vars(year)) +
+  theme_bw()
+```
 
-`stat_*()` and `geom_*()` are simply convenient instances of the layer() function that builds up the layers of ggplot.
+```{r ggprint, echo = TRUE}
+ggprint <- function(x) {
+  data <- ggplot_build(x)
+  gtable <- ggplot_gtable(data)
+  grid::grid.newpage()
+  grid::grid.draw(gtable)
+  return(invisible(x))
+}
+```
 
-> Unfortunately, due to an early design mistake I called these either stat_() or geom_(). A better decision would have been to call them layer_() functions: that’s a more accurate description because every layer involves a stat and a geom.
+```{r plot-image, echo = FALSE, eval = TRUE}
+p <- ggplot(mpg, aes(displ, hwy, color = drv)) +
+  geom_point(position = "jitter") +
+  geom_smooth(method = "lm", formula = y ~ x) +
+  facet_wrap(vars(year)) +
+  theme_bw()
+```
 
+```{r, eval = FALSE, echo = TRUE}
+ggprint(p)
+```
+
+
+]
+.pull-right[
+```{r print-image}
+ggprint(p)
+```
+
+]
+
+
+
+???
+
+- We know geom_* can be used to specify a plot, but don't know how ggplot2 translates this plot specification into an image.
+
+- Need to have some understanding to design extensions.
 
 ---
 
@@ -355,6 +404,13 @@ ggplot(diamonds, aes(price, colour = cut)) +
 ]
 ---
 
+# Stat and Geom require each other
+
+`stat_*()` and `geom_*()` are simply convenient instances of the layer() function that builds up the layers of ggplot.
+
+> Unfortunately, due to an early design mistake I called these either stat_() or geom_(). A better decision would have been to call them layer_() functions: that’s a more accurate description because every layer involves a stat and a geom.
+
+---
 # Examples: New geom by combining existing grobs
 
 ## geom_smooth() which combines geom_line() and geom_ribbon()

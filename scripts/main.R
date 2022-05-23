@@ -39,3 +39,24 @@ b +
 
 b +
   geom_spoke(aes(angle = 45), radius = 0.5)
+
+
+
+
+p <- ggplot(mpg, aes(displ, hwy, color = drv)) +
+  geom_point(position = "jitter") +
+  geom_smooth(method = "lm", formula = y ~ x) +
+  facet_wrap(vars(year)) +
+  ggtitle("A plot for expository purposes")
+
+
+ggprint <- function(x) {
+  data <- ggplot_build(x)
+  gtable <- ggplot_gtable(data)
+  grid::grid.newpage()
+  grid::grid.draw(gtable)
+  return(invisible(x))
+}
+
+
+ggprint(p)
