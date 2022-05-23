@@ -117,8 +117,6 @@ background-size: contain
 > Unfortunately, due to an early design mistake I called these either stat_() or geom_(). A better decision would have been to call them layer_() functions: that’s a more accurate description because every layer involves a stat and a geom.
                                        - Hadley Wickham
 
-
-
 ---
 
 # Stat: compute statistical summaries
@@ -188,40 +186,40 @@ layer_data(p)
 
 
 ---
+
 # Many geoms exists, why build a new one?
 
-- Around 47 existing geoms
+ - Around 47 existing geoms and many more extension packages already existing
 
+ - field specific extensions
+
+ - customize and integrate new graphical elements with existing ggplot2 visualizations, resulting in a broad range of informative graphics
+
+
+.footnote[
 Gallery for ggplot2 extensions
 https://exts.ggplot2.tidyverse.org/gallery/
-
-Extend the functionality of ggplot2:
-
-customize and integrate new graphical elements with existing ggplot2 visualizations, resulting in a broad range of informative graphics
-
-- complete story told my multiple plots
-
+]
 
 ---
 
 # My experience
 
+.smaller[
 - Difficult to connect ggplot2 interface and underlying machinery
 
-- Lost in long raw codes of primitive geoms 
+- Lost in long raw codes of primitive geoms and not understanding how the codes all fits together. 
 
-- Not understanding how the codes all fits together. 
+- Guides on ggplot internals are not yet so ubiquitous
 
-- guides on ggplot internals are not yet so ubiquitous
+- But it is possible! We did it and the package is currently on CRAN
+
+- Start small and get help
+]
+???
 
 - Wait for experienced developers to host webinars, release official guides before on ggplot2 extensions OR make a modest start?  
 
-- Start small and get help
-
-- It is possible! We did it so everyone can.
-
-
-???
 
 <!-- - It is difficult to understand how ggplot2 translates a plot specification into an image -->
 
