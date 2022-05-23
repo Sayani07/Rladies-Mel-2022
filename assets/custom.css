@@ -4,6 +4,8 @@
 
 .larger {font-size: 120%}
 
+.medium {font-size: 90%}
+
 
 body {
   font-family: 'Assistant', sans-serif;
@@ -55,7 +57,7 @@ li {
   font-family: Droid Mono, 'Lucida Console', Monaco, monospace;
 }
 .remark-code {
-  font-size: 0.6em;
+  font-size: 0.4em;
 }
 .remark-inline-code {
   font-size: 0.6em;

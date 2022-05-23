@@ -70,14 +70,14 @@ include_graphics("images/avatar.jpg")
 
 ---
 
-# Decomposing (Extension points) a ggplot into its consituents
+# Possible Extensions components of ggplot 
 
 
 .checked[ggplot2 creates graphics based on The Grammar of Graphics]
 
 .checked[graphics built step by step by adding new elements that allows for extensive flexibility and customization of plots]
 
-- Theme
+- Themes
 - scales
 - positions
 - statistics
@@ -143,7 +143,14 @@ layer_data(p)
 ```
 
 - displaying the transformed data not the raw one!
+
+```{r echo = TRUE, eval = TRUE}
+layer_data
+```
+
+-  data transformation pipeline from ggplot2 API to layer data
 ]
+
 
 ```{r}
 #knitr::include_graphics("images/layer-data.png")
@@ -335,6 +342,7 @@ str(geom_point())
 
 ## layer function specifies geom and stat
 
+.medium[
 .pull-left[
 .scroll-sign.f5[
 .overflow-scroll.h5[
@@ -356,6 +364,18 @@ ggplot2::layer(
 ```
 ]]
 
+.scroll-sign.f5[
+.overflow-scroll.h5[
+```{r, echo = TRUE}
+ggplot2::layer(
+  geom = GeomBoxplot,
+  stat = StatBoxplot,
+  position = PositionIdentity
+)
+```
+]]
+
+
 {{content}}
 ]
 
@@ -364,13 +384,6 @@ ggplot2::layer(
 .scroll-sign.f5[
 .overflow-scroll.h5[
 
-```{r, echo = TRUE}
-ggplot2::layer(
-  geom = GeomBoxplot,
-  stat = StatBoxplot,
-  position = PositionIdentity
-)
-```
 
 ]]
 
@@ -386,7 +399,7 @@ geom_boxplot()
 ]]
 {{content}}
 ]
-
+]
 ---
 
 
@@ -423,31 +436,23 @@ knitr::include_graphics("images/ggproto-methods.png")
 # Examples: Same geom different stats
 
 .pull-left[
-#### geom_segment()
+
+geom_point(stat = "smooth")
 
 ```{r, echo = FALSE}
 b <- ggplot(mtcars, aes(hp, mpg)) +
-  geom_point()
-
-df <- data.frame(x1 = 2.62, x2 = 3.57, y1 = 21.0, y2 = 15.0)
-b  +
- geom_segment(aes(x = x1, y = y1, xend = x2, yend = y2), data = df)
+  geom_point(stat = "smooth")
+b
 
 ```
-
 ]
-
 .pull-right[
-#### geom_spoke()
+geom_point()
 
 ```{r, echo = FALSE}
-df <- expand.grid(x = 1:10, y=1:10)
-df$angle <- runif(100, 0, 2*pi)
-df$speed <- runif(100, 0, sqrt(0.1 * df$x))
-
-ggplot(df, aes(x, y)) +
-  geom_point() +
-  geom_spoke(aes(angle = angle), radius = 0.5)
+q <- ggplot(mtcars, aes(hp, mpg)) +
+  geom_point()
+q
 ```
 ]
 
@@ -462,7 +467,7 @@ if you’re just drawing transformed data with pre-existing geom, then you can u
 # Examples: Same stat different geoms
 
 .pull-left[
-### geom_histogram()
+geom_histogram()
 
 ```{r, echo = TRUE}
 class(geom_histogram()$stat)
@@ -477,7 +482,7 @@ ggplot(diamonds, aes(price, fill = cut)) +
 ]
 
 .pull-right[
-### geom_freqpoly()
+geom_freqpoly()
 
 ```{r, echo = TRUE}
 class(geom_freqpoly()$stat)
@@ -526,28 +531,16 @@ Package gghdr
 
 
 ```{r, out.width="100%"}
-knitr::include_graphics("images/boxplot-vs-hdr.png")
+knitr::include_graphics("images/stat-hdrvsbox.png")
 ```
+
 .smaller[
 .smaller[
-.pull-left[
-*_statistical summaries to display_*
 
- 1. geom_boxplot(): 5 number summary
- 2. hdr.boxplot(): 7 summary points
-]
-
-.pull-right[
-*_how to display the summaries_*
-
- 1. A rectange to represent inter-quartile range, lines to represent median, whiskers and hingers and circles (or maybe points) to represent outliers
- 
- 2. (points) to represent outliers and a rectangle to represent the 99% coverage and line representing 50% coverages and modes.
-
+geom_boxplot(): 5 number summary  
+geom_hdr_boxplot(): many summaries depending on probability and density
 ]
 ]
-]
-
 ---
 
 
@@ -555,24 +548,15 @@ knitr::include_graphics("images/boxplot-vs-hdr.png")
 # Compare Geom: geom_boxplot() vs. geom_hdr_boxplot()
 
 
-```{r, out.width="100%"}
-knitr::include_graphics("images/boxplot-vs-hdr.png")
+```{r, out.width="90%"}
+knitr::include_graphics("images/geom-hdrvsbox.png")
 ```
 .smaller[
 .smaller[
-.pull-left[
-*_statistical summaries to display_*
-
- 1. geom_boxplot(): 5 number summary
- 2. hdr.boxplot(): 7 summary points
-]
-
-.pull-right[
-*_how to display the summaries_*
-
- 1. A rectange to represent inter-quartile range, lines to represent median, whiskers and hingers and circles (or maybe points) to represent outliers
+.smaller[
+A box to represent inter-quartile range could be represented with a cross-bar or two rectangles and a segment, whiskers with a segment and outliers with points.
  
- 2. (points) to represent outliers and a rectangle to represent the 99% coverage and line representing 50% coverages and modes.
+Rectangles to represent the probability coverages and segment to represent modes
 
 ]
 ]
@@ -651,16 +635,6 @@ One note, though, is that setup_data() is called before any position adjustment 
 
 ???
 
-- need to extend the functionality of ggplot2
-
-Defining features of a circle??
-
-Always subclass an existing class (make a new stat)
-
-Class construction
-data preparation
-calculation
-requirements
 
 ---
 # Basic setups 
@@ -730,6 +704,9 @@ background-size: contain
 
 ---
 
+# Summary
+
+---
 # Authors of gghdr
 
 ```{r authors}

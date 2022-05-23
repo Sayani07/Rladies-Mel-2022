@@ -228,3 +228,6 @@ knitr::include_graphics("images/allplots.png")
 ##----question1png
 
 knitr::include_graphics("images/question1.png")
+
+
+

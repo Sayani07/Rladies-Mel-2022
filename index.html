@@ -160,7 +160,24 @@ layer_data(p)
 ```
 
 - displaying the transformed data not the raw one!
+
+
+```r
+layer_data
+```
+
+```
+## function (plot, i = 1L) 
+## {
+##     ggplot_build(plot)$data[[i]]
+## }
+## &lt;bytecode: 0x7fccedbaa008&gt;
+## &lt;environment: namespace:ggplot2&gt;
+```
+
+-  data transformation pipeline from ggplot2 API to layer data
 ]
+
 
 
 
@@ -340,7 +357,7 @@ ggplot(faithful, aes(eruptions, waiting)) +
   geom_point()
 ```
 
-![](index_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+![](index_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
 ]
 
 .pull-right[
@@ -438,6 +455,7 @@ str(geom_point())
 
 ## layer function specifies geom and stat
 
+.medium[
 .pull-left[
 .scroll-sign.f5[
 .overflow-scroll.h5[
@@ -478,14 +496,8 @@ ggplot2::layer(
 ```
 ]]
 
-{{content}}
-]
-
-.pull-right[
-
 .scroll-sign.f5[
 .overflow-scroll.h5[
-
 
 ```r
 ggplot2::layer(
@@ -500,6 +512,17 @@ ggplot2::layer(
 ## stat_boxplot: na.rm = FALSE
 ## position_identity
 ```
+]]
+
+
+{{content}}
+]
+
+.pull-right[
+
+.scroll-sign.f5[
+.overflow-scroll.h5[
+
 
 ]]
 
@@ -522,7 +545,7 @@ geom_boxplot()
 ]]
 {{content}}
 ]
-
+]
 ---
 
 
@@ -555,16 +578,15 @@ mthods spam the
 # Examples: Same geom different stats
 
 .pull-left[
-#### geom_segment()
 
-![](index_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
-
-]
-
-.pull-right[
-#### geom_spoke()
+geom_point(stat = "smooth")
 
 ![](index_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
+]
+.pull-right[
+geom_point()
+
+![](index_files/figure-html/unnamed-chunk-16-1.png)&lt;!-- --&gt;
 ]
 
 Other examples drawing arrows with [geom_segment(arrow = arrow())](https://ggplot2.tidyverse.org/reference/geom_segment.html) and [geom_quiver()](http://pkg.mitchelloharawild.com/ggquiver/)
@@ -578,7 +600,7 @@ if you’re just drawing transformed data with pre-existing geom, then you can u
 # Examples: Same stat different geoms
 
 .pull-left[
-### geom_histogram()
+geom_histogram()
 
 
 ```r
@@ -597,12 +619,12 @@ class(geom_histogram()$geom)
 ## [1] "GeomBar"  "GeomRect" "Geom"     "ggproto"  "gg"
 ```
 
-![](index_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
+![](index_files/figure-html/unnamed-chunk-18-1.png)&lt;!-- --&gt;
 
 ]
 
 .pull-right[
-### geom_freqpoly()
+geom_freqpoly()
 
 
 ```r
@@ -621,7 +643,7 @@ class(geom_freqpoly()$geom)
 ## [1] "GeomPath" "Geom"     "ggproto"  "gg"
 ```
 
-![](index_files/figure-html/unnamed-chunk-19-1.png)&lt;!-- --&gt;
+![](index_files/figure-html/unnamed-chunk-20-1.png)&lt;!-- --&gt;
 ]
 
 
@@ -656,27 +678,15 @@ Package gghdr
 # Compare Stat: geom_boxplot() vs. geom_hdr_boxplot()
 
 
-&lt;img src="images/boxplot-vs-hdr.png" width="100%" /&gt;
+&lt;img src="images/stat-hdrvsbox.png" width="100%" /&gt;
+
 .smaller[
 .smaller[
-.pull-left[
-*_statistical summaries to display_*
 
- 1. geom_boxplot(): 5 number summary
- 2. hdr.boxplot(): 7 summary points
-]
-
-.pull-right[
-*_how to display the summaries_*
-
- 1. A rectange to represent inter-quartile range, lines to represent median, whiskers and hingers and circles (or maybe points) to represent outliers
- 
- 2. (points) to represent outliers and a rectangle to represent the 99% coverage and line representing 50% coverages and modes.
-
+geom_boxplot(): 5 number summary  
+geom_hdr_boxplot(): many summaries depending on probability and density
 ]
 ]
-]
-
 ---
 
 
@@ -684,22 +694,13 @@ Package gghdr
 # Compare Geom: geom_boxplot() vs. geom_hdr_boxplot()
 
 
-&lt;img src="images/boxplot-vs-hdr.png" width="100%" /&gt;
+&lt;img src="images/geom-hdrvsbox.png" width="90%" /&gt;
 .smaller[
 .smaller[
-.pull-left[
-*_statistical summaries to display_*
-
- 1. geom_boxplot(): 5 number summary
- 2. hdr.boxplot(): 7 summary points
-]
-
-.pull-right[
-*_how to display the summaries_*
-
- 1. A rectange to represent inter-quartile range, lines to represent median, whiskers and hingers and circles (or maybe points) to represent outliers
+.smaller[
+A box to represent inter-quartile range could be represented with a cross-bar or two rectangles and a segment, whiskers with a segment and outliers with points.
  
- 2. (points) to represent outliers and a rectangle to represent the 99% coverage and line representing 50% coverages and modes.
+Rectangles to represent the probability coverages and segment to represent modes
 
 ]
 ]
@@ -780,16 +781,6 @@ One note, though, is that setup_data() is called before any position adjustment 
 
 ???
 
-- need to extend the functionality of ggplot2
-
-Defining features of a circle??
-
-Always subclass an existing class (make a new stat)
-
-Class construction
-data preparation
-calculation
-requirements
 
 ---
 # Basic setups 
@@ -861,6 +852,9 @@ background-size: contain
 
 ---
 
+# Summary
+
+---
 # Authors of gghdr
 
 ![](images/authors1.png)&lt;!-- --&gt;

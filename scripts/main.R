@@ -8,12 +8,17 @@ faithful
 p_density <- ggplot(data = faithful, aes(x = eruptions)) + geom_density()
 
 p_hdr <- ggplot(data = faithful,
-                aes(y = eruptions)) + geom_hdr_boxplot()
+                aes(y = eruptions)) +
+  geom_hdr_boxplot(prob = c(.99, .50)) + theme_bw() + ylab("")
 
 p_box <- ggplot(data = faithful,
                 aes(y = eruptions)) +
-  geom_boxplot()
+  geom_boxplot()+ theme_bw()+ ylab("")
 
+library(patchwork)
+
+
+p_box + p_hdr
 
 #layer_data(p_hist)
 layer_data(p_hdr)[1,]
@@ -47,3 +52,9 @@ ungrouped_box <- ggplot(mpg,
   geom_boxplot()
 
 layer_data(ungrouped_box)
+
+
+b <- ggplot(mtcars, aes(hp, mpg)) +
+  geom_line()
+
+b$geom
