@@ -330,7 +330,6 @@ Know more at: https://sayani07.github.io/gghdr/
 ]
 ---
 
-
 # First place we are gonna begin
 ## Each geom layer is a stand-alone function
 
@@ -433,7 +432,6 @@ str(geom_point())
 - layer consisting of a type of stat, geom and position
 - layer is a list of different methods: functions that are defined for the geom_point() layer
 ]
-
 
 ---
 # geom_*() aliases for layer() function
@@ -552,14 +550,9 @@ mthods spam the
 
 ![](images/ggproto-methods.png)&lt;!-- --&gt;
 
-
-
-
-
-
 ---
 
-# Examples: Same geom different inputs
+# Examples: Same geom different stats
 
 .pull-left[
 #### geom_segment()
@@ -645,32 +638,22 @@ class: top left
 
 # Example: Build new stat and new geom
 
+Package gghdr
+
+- stat_* functions to be inherited from the R package `hdrcde`
+- geom_* functions are built to produce the new plotting symbols
 
 ---
-class: top left
 
-# Extending ggplot2
-
-- HDR is a novel technique for summarizing distribution for which plotting is not implemented in ggplot2
-
-- Sometimes complete story is told my multiple plots and `hdrcde` does not allow for 
-extensive flexibility and customization of plots
-
----
 #  Action plan?
  - Developing an extension usually starts with idea of what to draw!
- - If your desired geom looks similar to an existing geom, start from there.
- .smaller[
-
-  - hdr.boxplot() looks similar to geom_boxplot()
-  - geom_hdr_rug() looks like a combination of geom_rect() and geom_segment()
-       ]
+ - If your desired geom looks similar to an existing geom, start from there, for example, hdr.boxplot() looks similar to geom_boxplot()
  - Subclass one of the existing main ggproto classes
  - Naming scheme: The convention for class names is to prefix with the parent (or ancestor) ggproto class name and use upper camel case, e.g. GeomPoint
 
 ---
 
-# Let's go: geom_boxplot() vs. hdr.boxplot()
+# Compare Stat: geom_boxplot() vs. geom_hdr_boxplot()
 
 
 &lt;img src="images/boxplot-vs-hdr.png" width="100%" /&gt;
@@ -695,9 +678,38 @@ extensive flexibility and customization of plots
 ]
 
 ---
+
+
+
+# Compare Geom: geom_boxplot() vs. geom_hdr_boxplot()
+
+
+&lt;img src="images/boxplot-vs-hdr.png" width="100%" /&gt;
+.smaller[
+.smaller[
+.pull-left[
+*_statistical summaries to display_*
+
+ 1. geom_boxplot(): 5 number summary
+ 2. hdr.boxplot(): 7 summary points
+]
+
+.pull-right[
+*_how to display the summaries_*
+
+ 1. A rectange to represent inter-quartile range, lines to represent median, whiskers and hingers and circles (or maybe points) to represent outliers
+ 
+ 2. (points) to represent outliers and a rectangle to represent the 99% coverage and line representing 50% coverages and modes.
+
+]
+]
+]
+---
+
 # Basic setups 
 
 ## New stats
+
 .large[
 
 
@@ -707,22 +719,24 @@ StatNEW &lt;- ggproto("StatNEW", Stat,
                    default_aes = aes(&lt;default values for certain aesthetics&gt;),
                    required_aes = &lt;a character vector of required aesthetics&gt;)
 ```
-]
 
 
-## New geoms
-.large[
 
 ```r
-GeomNEW &lt;- ggproto("GeomNEW", Geom,
-        required_aes = &lt;a character vector of required aesthetics&gt;,
-        default_aes = aes(&lt;default values for certain aesthetics&gt;),
-        draw_key = &lt;a function used to draw the key in the legend&gt;,
-        draw_panel = function(data, panel_scales, coord) {
-                ## Function that returns a grid grob that will 
-                ## be plotted (this is where the real work occurs)
-        }
-)
+stat_new &lt;- function(mapping = NULL, data = NULL, geom = "segment",
+                           position = "identity", na.rm = FALSE, 
+                           show.legend = NA, inherit.aes = TRUE, ...) {
+        ggplot2::layer(
+                stat = StatNEW, 
+                data = data, 
+                mapping = mapping, 
+                geom = geom, 
+                position = position, 
+                show.legend = show.legend, 
+                inherit.aes = inherit.aes,
+                params = list(na.rm = na.rm, ...)
+        )
+}
 ```
 ]
 
@@ -778,6 +792,42 @@ calculation
 requirements
 
 ---
+# Basic setups 
+
+## New geoms
+
+.large[
+
+```r
+GeomNEW &lt;- ggproto("GeomNEW", Geom,
+        required_aes = &lt;a character vector of required aesthetics&gt;,
+        default_aes = aes(&lt;default values for certain aesthetics&gt;),
+        draw_key = &lt;a function used to draw the key in the legend&gt;,
+        draw_panel = function(data, panel_scales, coord) {
+                ## Function that returns a grid grob that will 
+                ## be plotted (this is where the real work occurs)
+        }
+)
+```
+
+
+
+```r
+geom_new &lt;- function(mapping = NULL, data = NULL, stat = "identity",
+                         position = "identity", na.rm = FALSE, 
+                         show.legend = NA, inherit.aes = TRUE, ...) {
+        ggplot2::layer(
+                geom = GeomNEW, mapping = mapping,  
+                data = data, stat = stat, position = position, 
+                show.legend = show.legend, inherit.aes = inherit.aes,
+                params = list(na.rm = na.rm, ...)
+        )
+}
+```
+]
+
+---
+
 
 # Essential components: geom_boxplot() vs. hdr.boxplot()
 
@@ -809,6 +859,39 @@ background-image: url("images/draw-panel.png")
 background-position: center
 background-size: contain
 
+---
+
+# Authors of gghdr
+
+![](images/authors1.png)&lt;!-- --&gt;
+
+---
+# Reference for extending ggplot2
+
+
+ - https://ggplot2-book.org/programming.html
+ - https://www.youtube.com/watch?v=h29g21z0a68
+ - https://www.youtube.com/watch?v=0m4yywqNPVY
+ - https://yjunechoe.github.io/posts/2020-09-26-demystifying-stat-layers-ggplot2/
+ - https://mran.microsoft.com/snapshot/2015-12-28/web/packages/ggplot2/vignettes/extending-ggplot2.html
+ - https://bookdown.org/rdpeng/RProgDA/building-new-graphical-elements.html
+
+
+---
+class: middle top
+
+#  More Information
+
+Package: https://github.com/Sayani07/gghdr 
+
+Slides: hhttps://sayanigupta-rladies22.netlify.app/  
+
+Materials: https://github.com/Sayani07/Rladies-Mel-2022/
+
+Slides created with &lt;i&gt; Rmarkdown, knitr, xaringan, xaringanthemer&lt;/i&gt;
+
+
+# Appendix
 
 ---
 # HDR boxplots
@@ -911,39 +994,6 @@ ggplot(aes(x = waiting, y = eruptions)) +
 
 ![](index_files/figure-html/combo-1.png)&lt;!-- --&gt;
 ]
-
-
-
----
-
-# Authors of gghdr
-
-![](images/authors1.png)&lt;!-- --&gt;
-
----
-# Reference for extending ggplot2
-
-
- - https://ggplot2-book.org/programming.html
- - https://www.youtube.com/watch?v=h29g21z0a68
- - https://www.youtube.com/watch?v=0m4yywqNPVY
- - https://yjunechoe.github.io/posts/2020-09-26-demystifying-stat-layers-ggplot2/
- - https://mran.microsoft.com/snapshot/2015-12-28/web/packages/ggplot2/vignettes/extending-ggplot2.html
- - https://bookdown.org/rdpeng/RProgDA/building-new-graphical-elements.html
-
-
----
-class: middle top
-
-#  More Information
-
-Package: https://github.com/Sayani07/gghdr 
-
-Slides: hhttps://sayanigupta-rladies22.netlify.app/  
-
-Materials: https://github.com/Sayani07/Rladies-Mel-2022/
-
-Slides created with &lt;i&gt; Rmarkdown, knitr, xaringan, xaringanthemer&lt;/i&gt;
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
