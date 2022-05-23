@@ -127,62 +127,23 @@ show layer_data for different geoms
 - If you want to use a different geom, make sure that your transformation function calculates all the required aesthetics for that geom
 ---
 
-#  From plot specification to plot image
+background-image: url("images/why-spec-image.png")
 
-.pull-left[
-```{r plot-spec, echo = TRUE, eval = FALSE}
-p <- ggplot(mpg, 
-            aes(displ, hwy, 
-                color = drv)) +
-  geom_point(position = "jitter") +
-  geom_smooth(method = "lm", 
-              formula = y ~ x) +
-  facet_wrap(vars(year)) +
-  theme_bw()
-```
+background-position: center
+background-size: contain
 
-```{r ggprint, echo = TRUE}
-ggprint <- function(x) {
-  data <- ggplot_build(x)
-  gtable <- ggplot_gtable(data)
-  grid::grid.newpage()
-  grid::grid.draw(gtable)
-  return(invisible(x))
-}
-```
+---
+background-image: url("images/print-spec-image.png")
 
-```{r plot-image, echo = FALSE, eval = TRUE}
-p <- ggplot(mpg, aes(displ, hwy, color = drv)) +
-  geom_point(position = "jitter") +
-  geom_smooth(method = "lm", formula = y ~ x) +
-  facet_wrap(vars(year)) +
-  theme_bw()
-```
-
-```{r, eval = FALSE, echo = TRUE}
-ggprint(p)
-```
-
-
-]
-.pull-right[
-```{r print-image}
-ggprint(p)
-```
-
-]
-
-
+background-position: center
+background-size: contain
 
 ???
 
 - We know geom_* can be used to specify a plot, but don't know how ggplot2 translates this plot specification into an image.
 
 - Need to have some understanding to design extensions.
-
 ---
-
-
 # Challenge(s)
 
 - Difficult to understand how ggplot2 translates a plot specification into an image
@@ -321,14 +282,6 @@ knitr::include_graphics("images/ggproto-methods.png")
 
 
 
-
----
-
-# Naming scheme
-
-Subclass an existing class
-
-The convention for class names is to prefix with the parent (or ancestor) ggproto class name and use upper camel case, e.g. GeomPoint
 
 ---
 
@@ -513,14 +466,24 @@ faithful %>% as_tibble
 ```
 ---
 
-# Extending ggplot2: Action plan?
+# Extending ggplot2
 
 - HDR is a novel technique for summarizing distribution for which plotting is not implemented in ggplot2
 
 - Sometimes complete story is told my multiple plots and `hdrcde` does not allow for 
 extensive flexibility and customization of plots
 
-- hdr.boxplot() looks close to geom_boxplot(). Compare to answer what your new stat and geom functions should be able to answer
+#  Action plan?
+
+- Developing an extension usually starts with idea of what to draw!
+
+- If your desired geom looks similar to an existing geom, start from there.
+  - hdr.boxplot() looks similar to geom_boxplot()
+  - geom_hdr_rug() looks like a combination of geom_rect() and geom_segment()
+
+- Subclass an existing class
+
+- Naming scheme: The convention for class names is to prefix with the parent (or ancestor) ggproto class name and use upper camel case, e.g. GeomPoint
 
 ---
 

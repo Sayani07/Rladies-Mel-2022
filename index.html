@@ -122,59 +122,23 @@ show layer_data for different geoms
 - If you want to use a different geom, make sure that your transformation function calculates all the required aesthetics for that geom
 ---
 
-#  From plot specification to plot image
+background-image: url("images/why-spec-image.png")
 
-.pull-left[
+background-position: center
+background-size: contain
 
-```r
-p &lt;- ggplot(mpg, 
-            aes(displ, hwy, 
-                color = drv)) +
-  geom_point(position = "jitter") +
-  geom_smooth(method = "lm", 
-              formula = y ~ x) +
-  facet_wrap(vars(year)) +
-  theme_bw()
-```
+---
+background-image: url("images/print-spec-image.png")
 
-
-```r
-ggprint &lt;- function(x) {
-  data &lt;- ggplot_build(x)
-  gtable &lt;- ggplot_gtable(data)
-  grid::grid.newpage()
-  grid::grid.draw(gtable)
-  return(invisible(x))
-}
-```
-
-
-
-
-```r
-ggprint(p)
-```
-
-
-]
-.pull-right[
-![](index_files/figure-html/print-image-1.png)&lt;!-- --&gt;
-
-]
-
-
+background-position: center
+background-size: contain
 
 ???
 
 - We know geom_* can be used to specify a plot, but don't know how ggplot2 translates this plot specification into an image.
 
 - Need to have some understanding to design extensions.
-
-
-
 ---
-
-
 # Challenge(s)
 
 - Difficult to understand how ggplot2 translates a plot specification into an image
@@ -204,7 +168,7 @@ ggplot(faithful, aes(eruptions, waiting)) +
   geom_point()
 ```
 
-![](index_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
+![](index_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
 ]
 
 .pull-right[
@@ -422,27 +386,19 @@ mthods spam the
 
 ---
 
-# Naming scheme
-
-Subclass an existing class
-
-The convention for class names is to prefix with the parent (or ancestor) ggproto class name and use upper camel case, e.g. GeomPoint
-
----
-
 # Examples: Same geom different inputs
 
 .pull-left[
 #### geom_segment()
 
-![](index_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+![](index_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
 
 ]
 
 .pull-right[
 #### geom_spoke()
 
-![](index_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
+![](index_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
 ]
 
 Other examples drawing arrows with [geom_segment(arrow = arrow())](https://ggplot2.tidyverse.org/reference/geom_segment.html) and [geom_quiver()](http://pkg.mitchelloharawild.com/ggquiver/)
@@ -475,7 +431,7 @@ class(geom_histogram()$geom)
 ## [1] "GeomBar"  "GeomRect" "Geom"     "ggproto"  "gg"
 ```
 
-![](index_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
+![](index_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
 
 ]
 
@@ -499,7 +455,7 @@ class(geom_freqpoly()$geom)
 ## [1] "GeomPath" "Geom"     "ggproto"  "gg"
 ```
 
-![](index_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
+![](index_files/figure-html/unnamed-chunk-16-1.png)&lt;!-- --&gt;
 ]
 ---
 
@@ -620,14 +576,24 @@ faithful %&gt;% as_tibble
 &lt;img src="images/allplots1png.png" width="90%" /&gt;
 ---
 
-# Extending ggplot2: Action plan?
+# Extending ggplot2
 
 - HDR is a novel technique for summarizing distribution for which plotting is not implemented in ggplot2
 
 - Sometimes complete story is told my multiple plots and `hdrcde` does not allow for 
 extensive flexibility and customization of plots
 
-- hdr.boxplot() looks close to geom_boxplot(). Compare to answer what your new stat and geom functions should be able to answer
+#  Action plan?
+
+- Developing an extension usually starts with idea of what to draw!
+
+- If your desired geom looks similar to an existing geom, start from there.
+  - hdr.boxplot() looks similar to geom_boxplot()
+  - geom_hdr_rug() looks like a combination of geom_rect() and geom_segment()
+
+- Subclass an existing class
+
+- Naming scheme: The convention for class names is to prefix with the parent (or ancestor) ggproto class name and use upper camel case, e.g. GeomPoint
 
 ---
 
