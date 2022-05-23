@@ -48,16 +48,18 @@ class: top left
 # About me
 
 .pull-left[
+.smaller[
 - Recently graduated from Monash University
-- visualizations of probability distribution of large temporal data
-- research interest:
-- 2nd talk after covid
+- Ph.D. on visualization and analysis of probability distribution of large temporal data
+- Like coding, data visualization, data analysis, time series analysis and forecasting, statistical modeling
+- Part of [NUMBAT](https://numbat.space/) group
+- Thanks R-Ladies Melbourne
 ]
-
+]
 
 .pull-right[
 
-![](images/avatar.jpg)&lt;!-- --&gt;
+&lt;img src="images/avatar.jpg" width="90%" /&gt;
 
 ]
 
@@ -68,7 +70,7 @@ class: top left
 
 .checked[ggplot2 creates graphics based on The Grammar of Graphics]
 
-.checked[graphics are built step by step by adding new elements that allows for extensive flexibility and customization of plots]
+.checked[graphics built step by step by adding new elements that allows for extensive flexibility and customization of plots]
 
 - Theme
 - scales
@@ -80,41 +82,6 @@ class: top left
 
 &lt;!-- - mapping  --&gt;
 &lt;!-- - data --&gt;
-
----
-
-# Many geoms exists, why build a new one?
-
-- Around 47 existing geoms
-
-Gallery for ggplot2 extensions
-https://exts.ggplot2.tidyverse.org/gallery/
-
-Extend the functionality of ggplot2:
-
-customize and integrate new graphical elements with existing ggplot2 visualizations, resulting in a broad range of informative graphics
-
-## complete story told my multiple plots
-
-
----
-
-
-# What is the role of Stat in all of this?
-
-show layer_data for different geoms
-
-???
-
-- Even though data is tidy, may not represent te values you want to display
-
-- Do not transform your already tidy data so that it contains those values
-
-- pass your original tidy data into ggplot() as in and allow stat_*() functions to apply transformations internally
-
-- stat_* customised for both their geoms and their transformation functions and works similar to geom_*() functions in other regards
-
-- If you want to use a different geom, make sure that your transformation function calculates all the required aesthetics for that geom
 ---
 
 background-image: url("images/why-spec-image.png")
@@ -133,26 +100,190 @@ background-size: contain
 - We know geom_* can be used to specify a plot, but don't know how ggplot2 translates this plot specification into an image.
 
 - Need to have some understanding to design extensions.
----
-# Challenge(s)
 
-- Difficult to understand how ggplot2 translates a plot specification into an image
+---
+
+# ggplot2 Extensions
+
+ - Extensions for all components are possible, theme being the easiest one and geom and stat being the most common one.
+
+ - Today's talk focuses on extending the key elements that builds up the layers of ggplot - `stat_*()` and `geom_*()` 
+
+&gt; Unfortunately, due to an early design mistake I called these either stat_() or geom_(). A better decision would have been to call them layer_() functions: that’s a more accurate description because every layer involves a stat and a geom.
+                                       - Hadley Wickham
+
+
+
+---
+
+# Stat: compute statistical summaries
+
+.smaller[
+.pull-left[
+
+```r
+p &lt;- ggplot(mpg,
+            aes(as.factor(cyl), 
+                            hwy)) +
+  geom_boxplot()
+
+p
+```
+
+![](index_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+]
+]
+
+
+.smaller[
+.pull-right[
+
+
+```r
+layer_data(p)
+```
+
+```
+##    ymin lower middle upper ymax           outliers notchupper notchlower x
+## 1 20.00 26.00     29    31   37         44, 44, 41   29.87778   28.12222 1
+## 2 28.75 28.75     29    29   29                 28   29.19750   28.80250 2
+## 3 17.00 19.00     24    26   29                      25.24435   22.75565 3
+## 4 12.00 16.00     17    19   23 26, 26, 25, 24, 25   17.56654   16.43346 4
+##   flipped_aes PANEL group ymin_final ymax_final  xmin  xmax xid newx new_width
+## 1       FALSE     1     1         20         44 0.625 1.375   1    1      0.75
+## 2       FALSE     1     2         28         29 1.625 2.375   2    2      0.75
+## 3       FALSE     1     3         17         29 2.625 3.375   3    3      0.75
+## 4       FALSE     1     4         12         26 3.625 4.375   4    4      0.75
+##   weight colour  fill size alpha shape linetype
+## 1      1 grey20 white  0.5    NA    19    solid
+## 2      1 grey20 white  0.5    NA    19    solid
+## 3      1 grey20 white  0.5    NA    19    solid
+## 4      1 grey20 white  0.5    NA    19    solid
+```
+
+- displaying the transformed data not the raw one!
+]
+
+
+
+]
+
+
+???
+
+- Even though data is tidy, may not represent te values you want to display
+
+- Do not transform your already tidy data so that it contains those values
+
+- pass your original tidy data into ggplot() as in and allow stat_*() functions to apply transformations internally
+
+- stat_* customised for both their geoms and their transformation functions and works similar to geom_*() functions in other regards
+
+- If you want to use a different geom, make sure that your transformation function calculates all the required aesthetics for that geom
+
+---
+
+
+# Geom: geometry displaying data or summaries
+
+
+.left-column[
+- geom_boxplot()
+- geom_violin()
+- geom_density()
+- geom_line()
+- geom_lv()
+- geom_histogram()
+]
+
+.right-column[
+![](images/allplots.png)&lt;!-- --&gt;
+]
+
+
+---
+# Many geoms exists, why build a new one?
+
+- Around 47 existing geoms
+
+Gallery for ggplot2 extensions
+https://exts.ggplot2.tidyverse.org/gallery/
+
+Extend the functionality of ggplot2:
+
+customize and integrate new graphical elements with existing ggplot2 visualizations, resulting in a broad range of informative graphics
+
+- complete story told my multiple plots
+
+
+---
+
+# My experience
+
+- Difficult to connect ggplot2 interface and underlying machinery
+
+- Lost in long raw codes of primitive geoms 
+
+- Not understanding how the codes all fits together. 
+
+- guides on ggplot internals are not yet so ubiquitous
+
+- Wait for experienced developers to host webinars, release official guides before on ggplot2 extensions OR make a modest start?  
+
+- Start small and get help
+
+- It is possible! We did it so everyone can.
+
+
+???
+
+&lt;!-- - It is difficult to understand how ggplot2 translates a plot specification into an image --&gt;
 
 &lt;!-- - ggplot2 interface is different to the structure of the underlying machinery that makes it work. --&gt;
 
 &lt;!-- connecting the underlying theory of ggplot2 and The ggplot2 API --&gt;
 
--  guides on ggplot internals are extremely sparse
+
 
 &lt;!-- - there are no smooth entry points for aspiring developers. Even for experienced users, the sheer scale and foreignness is demotivating. --&gt;
 
-- Wait for experienced developers to host webinars, release official guides before developing ggplot2 extensions OR make a modest start?  
-
-
-This is me making a modest attempt.
 
 ---
 
+class: top left
+
+# Example: Build new stat and new geom
+
+.pull-left[
+
+- R Package gghdr
+- implement Highest Density Region (HDR) plots in ggplot2 
+- inspired from R package [`hdrcde`](https://pkg.robjhyndman.com/hdrcde/) developed by [Rob
+Hyndman](https://robjhyndman.com/)
+]
+
+
+.pull-right[
+
+.animated.bounce[
+&lt;img src="images/gghdr_logo.png" height=280px&gt;
+]
+]
+
+---
+
+# Different summarization expose different features
+
+.left-column[
+- Boxplot not suitable for summarizing multi-modal distributions
+- often useful to display different summarization in unison
+]
+
+.right-column[
+![](images/question1.png)&lt;!-- --&gt;
+]
+
+---
 # First place we are gonna begin
 ## Each geom layer is a stand-alone function
 
@@ -163,7 +294,7 @@ ggplot(faithful, aes(eruptions, waiting)) +
   geom_point()
 ```
 
-![](index_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+![](index_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
 ]
 
 .pull-right[
@@ -386,14 +517,14 @@ mthods spam the
 .pull-left[
 #### geom_segment()
 
-![](index_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
+![](index_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
 
 ]
 
 .pull-right[
 #### geom_spoke()
 
-![](index_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+![](index_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
 ]
 
 Other examples drawing arrows with [geom_segment(arrow = arrow())](https://ggplot2.tidyverse.org/reference/geom_segment.html) and [geom_quiver()](http://pkg.mitchelloharawild.com/ggquiver/)
@@ -426,7 +557,7 @@ class(geom_histogram()$geom)
 ## [1] "GeomBar"  "GeomRect" "Geom"     "ggproto"  "gg"
 ```
 
-![](index_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
+![](index_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
 
 ]
 
@@ -450,15 +581,9 @@ class(geom_freqpoly()$geom)
 ## [1] "GeomPath" "Geom"     "ggproto"  "gg"
 ```
 
-![](index_files/figure-html/unnamed-chunk-16-1.png)&lt;!-- --&gt;
+![](index_files/figure-html/unnamed-chunk-19-1.png)&lt;!-- --&gt;
 ]
----
 
-# Stat and Geom require each other
-
-`stat_*()` and `geom_*()` are simply convenient instances of the layer() function that builds up the layers of ggplot.
-
-&gt; Unfortunately, due to an early design mistake I called these either stat_() or geom_(). A better decision would have been to call them layer_() functions: that’s a more accurate description because every layer involves a stat and a geom.
 
 ---
 # Examples: New geom by combining existing grobs
@@ -489,19 +614,6 @@ Hyndman](https://robjhyndman.com/)
 ]
 ]
 
----
-
-# Graphing distribution summaries
-
-
-.left-column[
-- several ways to summarize a distribution
-- R package ggdist for visualizing distributions and uncertainty
-]
-
-.right-column[
-![](images/allplots.png)&lt;!-- --&gt;
-]
 ---
 class: top left
 
