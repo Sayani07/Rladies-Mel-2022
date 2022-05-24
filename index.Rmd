@@ -303,7 +303,8 @@ background-size: contain
 
 # Other gghdr capabilities
 
-```{r hdrcde, out.width="90%"}
+```{r, out.width="80%"}
+knitr::include_graphics("images/allplot-gghdr.png")
 ```
 
 .smaller[
@@ -428,7 +429,7 @@ mthods spam the
 
 
 ```{r}
-knitr::include_graphics("images/ggproto-methods.png")
+knitr::include_graphics("images/ggproto-methods-obj.png")
 ```
 
 ---
@@ -672,39 +673,35 @@ geom_new <- function(mapping = NULL, data = NULL, stat = "identity",
 ---
 
 
-# Essential components: geom_boxplot() vs. hdr.boxplot()
+# Review essential components (live)
 
 
-## diff compute_group()
-
-[stat-boxplot.R](https://github.com/tidyverse/ggplot2/blob/main/R/stat-boxplot.r)
-
-[geom-boxplot.R](https://github.com/tidyverse/ggplot2/blob/main/R/stat-boxplot.r)
-
-# diff draw_group()
+## Highest density region plots
 
 [stat-hdr.R](https://github.com/Sayani07/gghdr/blob/master/R/stat-hdr.R)
 
 [geom-hdr-boxplot.R](https://github.com/Sayani07/gghdr/blob/master/R/geom-hdr-boxplot.R)
 
+## Boxplots
+
+[stat-boxplot.R](https://github.com/tidyverse/ggplot2/blob/main/R/stat-boxplot.r)
+
+[geom-boxplot.R](https://github.com/tidyverse/ggplot2/blob/main/R/geom-boxplot.r)
+
+
 ---
 
-background-image: url("images/compute-group.png")
+background-image: url("images/hdr-ess-code.png")
 
 background-position: center
 background-size: contain
 
-
 ---
 
-background-image: url("images/draw-panel.png")
+# Could you think of similar essential chunks for boxplots?
 
-background-position: center
-background-size: contain
 
----
-
-# Summary
+`r countdown::countdown(minutes = 0, seconds = 120)`
 
 ---
 # Authors of gghdr
@@ -738,10 +735,11 @@ Materials: https://github.com/Sayani07/Rladies-Mel-2022/
 
 Slides created with <i> Rmarkdown, knitr, xaringan, xaringanthemer</i>
 
+---
 
 # Appendix
 
----
+
 # HDR boxplots
 
 .pull-left[
