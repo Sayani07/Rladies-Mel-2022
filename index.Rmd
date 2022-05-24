@@ -215,9 +215,9 @@ https://exts.ggplot2.tidyverse.org/gallery/
 .smaller[
 - Difficult to connect ggplot2 interface and underlying machinery
 
-- Guides on ggplot internals are not yet so ubiquitous
+- Guides are not yet so ubiquitous
 
-- Frustrated and lost in long source codes with so many variables or parameters and and not understanding how the codes all fits together. 
+- Frustrated and lost in long source codes with so many variables or parameters and and not understanding how the codes all fits together
 
 - modest attempt to point to essential ideas for creating new geoms
 
@@ -407,28 +407,6 @@ geom_boxplot()
 
 
 # ggproto: Object Oriented programming tailor-made for ggplot2 
-
-
-```{r}
-knitr::include_graphics("images/ggproto-factory.png")
-```
-
-
-
-???
-(didn't allow sub-classing objects between packages)
-
-orchetrates all the rendering and mechanics of how ggplot uses the data and convert it into a plot
-
-
-kind of factories
-mthods spam the 
-
----
-
-
-# From data to plot using ggproto
-
 
 ```{r}
 knitr::include_graphics("images/ggproto-methods-obj.png")
