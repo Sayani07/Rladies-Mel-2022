@@ -215,11 +215,13 @@ https://exts.ggplot2.tidyverse.org/gallery/
 .smaller[
 - Difficult to connect ggplot2 interface and underlying machinery
 
-- Lost in long raw codes of primitive geoms and not understanding how the codes all fits together. 
-
 - Guides on ggplot internals are not yet so ubiquitous
 
-- But it is possible! We did it and so can you.
+- Frustrated and lost in long source codes with so many variables or parameters and and not understanding how the codes all fits together. 
+
+- modest attempt to point to essential ideas for creating new geoms
+
+- It is possible! We did it and so can you.
 
 ]
 ???
@@ -521,10 +523,11 @@ Package gghdr
 ---
 
 #  Action plan?
- - Developing an extension usually starts with idea of what to draw!
- - If your desired geom looks similar to an existing geom, start from there, for example, hdr.boxplot() looks similar to geom_boxplot()
+ - Get an idea of what to draw!
+ - Find if your geom looks similar to an existing geom, start from there
  - Subclass one of the existing main ggproto classes
  - Naming scheme: The convention for class names is to prefix with the parent (or ancestor) ggproto class name and use upper camel case, e.g. GeomPoint
+ - Start small and build up the essential components
 
 ---
 
@@ -562,6 +565,40 @@ Rectangles to represent the probability coverages and segment to represent modes
 ]
 ]
 ]
+---
+
+# Basic setups 
+
+## New geoms
+
+.large[
+```{r, eval = FALSE, echo = TRUE}
+GeomNEW <- ggproto("GeomNEW", Geom,
+        required_aes = <a character vector of required aesthetics>,
+        default_aes = aes(<default values for certain aesthetics>),
+        draw_key = <a function used to draw the key in the legend>,
+        draw_panel = function(data, panel_scales, coord) {
+                ## Function that returns a grid grob that will 
+                ## be plotted (this is where the real work occurs)
+        }
+)
+```
+
+
+```{r, eval = FALSE, echo = TRUE}
+geom_new <- function(mapping = NULL, data = NULL, stat = "identity",
+                         position = "identity", na.rm = FALSE, 
+                         show.legend = NA, inherit.aes = TRUE, ...) {
+        ggplot2::layer(
+                geom = GeomNEW, mapping = mapping,  
+                data = data, stat = stat, position = position, 
+                show.legend = show.legend, inherit.aes = inherit.aes,
+                params = list(na.rm = na.rm, ...)
+        )
+}
+```
+]
+
 ---
 
 # Basic setups 
@@ -636,42 +673,7 @@ One note, though, is that setup_data() is called before any position adjustment 
 
 ???
 
-
 ---
-# Basic setups 
-
-## New geoms
-
-.large[
-```{r, eval = FALSE, echo = TRUE}
-GeomNEW <- ggproto("GeomNEW", Geom,
-        required_aes = <a character vector of required aesthetics>,
-        default_aes = aes(<default values for certain aesthetics>),
-        draw_key = <a function used to draw the key in the legend>,
-        draw_panel = function(data, panel_scales, coord) {
-                ## Function that returns a grid grob that will 
-                ## be plotted (this is where the real work occurs)
-        }
-)
-```
-
-
-```{r, eval = FALSE, echo = TRUE}
-geom_new <- function(mapping = NULL, data = NULL, stat = "identity",
-                         position = "identity", na.rm = FALSE, 
-                         show.legend = NA, inherit.aes = TRUE, ...) {
-        ggplot2::layer(
-                geom = GeomNEW, mapping = mapping,  
-                data = data, stat = stat, position = position, 
-                show.legend = show.legend, inherit.aes = inherit.aes,
-                params = list(na.rm = na.rm, ...)
-        )
-}
-```
-]
-
----
-
 
 # Review essential components (live)
 
@@ -698,7 +700,17 @@ background-size: contain
 
 ---
 
-# Could you think of similar essential chunks for boxplots?
+
+background-image: url("images/fit-tog.png")
+
+background-position: center
+background-size: contain
+
+---
+
+
+
+# Could you think of similar mind map for boxplots?
 
 
 `r countdown::countdown(minutes = 0, seconds = 120)`
